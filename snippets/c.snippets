@@ -1,0 +1,237 @@
+# C Code Snippets
+
+# Comment Blocks
+snippet c0
+	/*----------------------------------------------------------
+	${1}
+	----------------------------------------------------------*/
+snippet c1
+	    /*------------------------------------------------------
+	    ${1}
+	    ------------------------------------------------------*/
+snippet c2
+	        /*--------------------------------------------------
+	        ${1}
+	        --------------------------------------------------*/
+snippet c3
+	            /*----------------------------------------------
+	            ${1}
+	            ----------------------------------------------*/
+snippet c4
+	                /*------------------------------------------
+	                ${1}
+	                ------------------------------------------*/
+snippet c5
+	                    /*--------------------------------------
+	                    ${1}
+	                    --------------------------------------*/
+snippet c6
+	                        /*----------------------------------
+	                        ${1}
+	                        ----------------------------------*/
+
+# Separator Bars
+snippet b0
+	/*==========================================================================*/
+snippet b1
+	    /*======================================================================*/
+
+# main()
+snippet main
+	/*--------------------------------------------------------------------
+	Program Entry Point
+	--------------------------------------------------------------------*/
+	int main( int argc, const char** argv ) {
+		${1}
+		return 0;
+	}
+
+# #include "..."
+snippet inc
+	#include "${1:`Filename("$1.h")`}"${2}
+
+# Function Skeletons
+snippet fun
+	/*==========================================================================*/
+	int ${1:name}(                      //${2:description}
+	    int                 param       //${3:param}
+	) {                                 //${4:returns}
+	
+	    ${5}
+	}
+	
+snippet vfun
+	/*==========================================================================*/
+	int ${1:name}(                      //description
+	    int                 argc,       //argc
+	    char**              argv        //argv
+	) {                                 //returns
+	
+	    /*hz--------------------------------------------------------------
+	    A verbose discussion about what this function does, or how it's
+	    implemented, or further detail about particular usage scenarios.
+	    These comments are formatted in a "templated" type of Markdown
+	    syntax.
+	
+	    Calling out a particular \`symbol\` (potentially linked to code)
+	    is easy.  It even works if you like to use \`function()\` to make
+	    it obvious you're talking about a function.
+	
+	    Generated Documentation
+	    =======================
+	
+	    This style uses a lot of self-imposed rules for documenting code
+	    more inline with the code, rather than through huge blocks of text
+	    (this worst-case template doesn't help illustrate that).  You can
+	    generate documentation from other comments by hooking into the
+	    inline comments here.
+	
+	    Example code:
+	
+	        enum {                          //enum description
+	            ITEM_0,                     //comment for item 0
+	            ITEM_1,                     //comment for item 1
+	            NUM_ITEMS                   //# this is the number of items
+	        };
+	
+	    Generate a two-column list of items in the enumeration:
+	
+	        {{enum,enum description}}
+	
+	    Another example:
+	
+	        static const char   strings[ 4 ][ 32 ] = {
+	            "a", "list", "of", "strings"
+	        };
+	
+	    List of all strings:
+	
+	        {{const,strings}}
+	
+	    Single string from list:
+	
+	        {{const,strings[2]}}
+	
+	    Verbose Interface Documentation
+	    ===============================
+	
+	    @param argc
+	    This is the expanded document string for this parameter.
+	
+	    @param argv
+	    This is the expanded document string discussing the second
+	    parameter because it's fairly complex.
+	
+	    Each entry here can also have sections, paragraphs, tables, and
+	    use all the markup features described above.
+	
+	    @return
+	    This is the expanded document string discussing all the different
+	    return values.
+	    ----------------------------------------------------------------*/
+	
+	    //local variables
+	    int                 local;      //local variable
+	
+	    //initialize local variables
+	    local = 0;
+	
+	    //do something here
+	    local += argc;
+	
+	    //return the results
+	    return local;
+	}
+	
+snippet doxyfun
+	/**
+	 *  ${1:name}
+	 *
+	 *  ${2:description}
+	 *
+	 *  @param param Description
+	 *  @return Description
+	 */
+	void function(
+	    void
+	) {
+	
+	    ${3}
+	
+	}
+	
+
+# Source
+snippet source
+	/*****************************************************************************
+	
+	${1:`Filename()`}.c
+	
+	${2:description}
+	
+	*****************************************************************************/
+	
+	/*----------------------------------------------------------------------------
+	Includes
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Macros
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Types and Structures
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Memory Constants
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Module Variables
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Module Prototypes
+	----------------------------------------------------------------------------*/
+	
+	${3}
+	
+
+# Header
+snippet header
+	/*****************************************************************************
+	
+	${1:`Filename()`}.h
+	
+	${2:description}
+	
+	*****************************************************************************/
+	
+	#ifndef _${3:`toupper(Filename())`}_H
+	#define _$3_H
+	
+	/*----------------------------------------------------------------------------
+	Includes
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Macros
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Types and Structures
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Memory Constants
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Interface Prototypes
+	----------------------------------------------------------------------------*/
+	
+	${4}
+	
+	#endif  /* _$3_H */
+	

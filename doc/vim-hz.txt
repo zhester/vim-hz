@@ -1,0 +1,27 @@
+*vim-hz.txt*    Personal Vim Plugin
+*vim-hz*
+
+=============================================================================
+CONTENTS                                                    *vim-hz-contents*
+
+    1. About ................................... |vim-hz-about|
+    2. Configurations .......................... |vim-hz-configurations|
+        2.1. Snippets .......................... |vim-hz-snippets|
+        2.2. Syntax ............................ |vim-hz-syntax|
+
+
+=============================================================================
+1. About                                                       *vim-hz-about*
+
+This is a plugin I use to make it easy to control my personal Vim settings.
+
+
+=============================================================================
+2. Configurations                                     *vim-hz-configurations*
+
+-----------------------------------------------------------------------------
+2.1. Snippets                                                *vim-hz-snippets*
+
+-----------------------------------------------------------------------------
+2.2. Syntax                                                   *vim-hz-syntax*
+

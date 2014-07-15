@@ -1,0 +1,132 @@
+# Python Code Snippets
+
+
+# Separator Bars
+snippet b0
+	#=============================================================================
+snippet b1
+	    #=========================================================================
+
+
+# Blocky Comments
+snippet c0
+	#-----------------------------------------------------------------------------
+	# ${1}
+	#-----------------------------------------------------------------------------
+snippet c1
+	    #-------------------------------------------------------------------------
+	    # ${1}
+	    #-------------------------------------------------------------------------
+snippet c2
+	        #---------------------------------------------------------------------
+	        # ${1}
+	        #---------------------------------------------------------------------
+snippet c3
+	            #-----------------------------------------------------------------
+	            # ${1}
+	            #-----------------------------------------------------------------
+snippet c4
+	                #-------------------------------------------------------------
+	                # ${1}
+	                #-------------------------------------------------------------
+snippet c5
+	                    #---------------------------------------------------------
+	                    # ${1}
+	                    #---------------------------------------------------------
+snippet c6
+	                        #-----------------------------------------------------
+	                        # ${1}
+	                        #-----------------------------------------------------
+
+
+# Function/Class Skeletons
+snippet fun
+	#=============================================================================
+	def ${1:name}():
+	    """
+	    ${2:description}
+	    """
+	    ${3:pass}
+snippet meth
+	    #=========================================================================
+	    def ${1:name}( self ):
+	        """
+	        ${2:description}
+	        """
+	        ${3:pass}
+snippet class
+	#=============================================================================
+	class ${1:name}( object ):
+	    """
+	    ${2:description}
+	    """
+	
+	    #=========================================================================
+	    def __init__( self ):
+	        """
+	        Initializes a $1 object.
+	        """
+	        super( $1, self ).__init__( *args, **kwargs )
+	
+
+
+# Generic Shell Script
+snippet shell
+	#!/usr/bin/env python
+	
+	
+	"""
+	${1:description}
+	"""
+	
+	
+	__version__ = '0.0.0'
+	
+	
+	#=============================================================================
+	def main( argv ):
+	    """
+	    Script execution entry point
+	    @param argv         Arguments passed to the script
+	    @return             Exit code (0 = success)
+	    """
+	
+	    # imports when using this as a script
+	    import argparse
+	
+	    # create and configure an argument parser
+	    parser = argparse.ArgumentParser(
+	        description = '$1',
+	        add_help    = False
+	    )
+	    parser.add_argument(
+	        '-h',
+	        '--help',
+	        default = False,
+	        help    = 'Display this help message and exit.',
+	        action  = 'help'
+	    )
+	    parser.add_argument(
+	        '-v',
+	        '--version',
+	        default = False,
+	        help    = 'Display script version and exit.',
+	        action  = 'version',
+	        version = __version__
+	    )
+	
+	    # parse the arguments
+	    args = parser.parse_args( argv[ 1 : ] )
+	
+	    # check args.* for script execution here
+	    ${2}
+	
+	    # return success
+	    return 0
+	
+	
+	#=============================================================================
+	if __name__ == "__main__":
+	    import sys
+	    sys.exit( main( sys.argv ) )
+	
