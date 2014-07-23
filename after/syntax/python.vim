@@ -12,8 +12,4 @@ syn keyword pythonNone None
 hi link pythonNone Constant
 
 " Make use of extended C-style syntax highlighting.
-let $cstyle = expand( 'cstyle.vim' )
-if filereadable( $cstyle )
-    source $cstyle
-endif
-
+runtime syntax/cstyle.vim

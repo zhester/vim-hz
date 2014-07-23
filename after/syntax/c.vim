@@ -18,7 +18,4 @@ syn match cCustomType display '[a-zA-Z_][a-zA-Z0-9_]\+_t\(ype\|8\|16\|32\)'
 hi link cCustomType cType
 
 " Make use of extended C-style syntax highlighting.
-let $cstyle = expand( 'cstyle.vim' )
-if filereadable( $cstyle )
-    source $cstyle
-endif
+runtime syntax/cstyle.vim
