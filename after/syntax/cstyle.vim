@@ -44,8 +44,9 @@ let cOperatorList .= '\@!'              " Negative look-ahead (this and the \@<!
 " Compile/execute the operator matching.
 exe "syn match cOperator display '" . cOperatorList . "'"
 
-" Also, match triple-equals (for JavaScript and PHP).
+" Also, match triple-equals, not-double-equals (for JavaScript and PHP).
 syn match cOperator display '==='
+syn match cOperator display '!=='
 
 " Also, match semi-colons.
 syn match cOperator display ';'
