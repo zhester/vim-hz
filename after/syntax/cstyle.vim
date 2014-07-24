@@ -17,7 +17,7 @@ let cOperatorList .= '\@<!'             " Negative look-behind (check that the
 let cOperatorList .= '\%('              " Beginning of a list of possible
                                         "   operators
 let cOperatorList .=     '\('           " First option, the following symbols...
-let cOperatorList .=        '[-&*/|+<>=]'
+let cOperatorList .=        '[-&*|+<>=]'
 let cOperatorList .=     '\)'
 let cOperatorList .=     '\1\?'         " Followed by (optionally) the exact
                                         "  same symbol, so -, --, =, ==, &, &&
@@ -27,7 +27,7 @@ let cOperatorList .= '\|'               " Next option:
 let cOperatorList .=     '[-+*/%&^|!]=' " One of the listed symbols followed by
                                         "   an =, e.g. +=, -=, &= etc
 let cOperatorList .= '\|'               " Next option:
-let cOperatorList .=     '[*?:,!~%]'    " Some simple single character operators
+let cOperatorList .=     '[*/?:,!~%]'   " Some simple single character operators
 let cOperatorList .= '\|'               " Next option:
 let cOperatorList .=     '\('           " One of the shift characters:
 let cOperatorList .=         '[<>]'
