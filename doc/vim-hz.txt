@@ -5,23 +5,153 @@
 CONTENTS                                                    *vim-hz-contents*
 
     1. About ................................... |vim-hz-about|
-    2. Configurations .......................... |vim-hz-configurations|
-        2.1. Snippets .......................... |vim-hz-snippets|
-        2.2. Syntax ............................ |vim-hz-syntax|
+    2. Requirements ............................ |vim-hz-requirements|
+    3. Configurations .......................... |vim-hz-configurations|
+        3.1. Snippets .......................... |vim-hz-snippets|
+        3.2. Syntax ............................ |vim-hz-syntax|
 
 
 =============================================================================
 1. About                                                       *vim-hz-about*
 
 This is a plugin I use to make it easy to control my personal Vim settings.
+Below summarizes changes made by this plugin.
 
 
 =============================================================================
-2. Configurations                                     *vim-hz-configurations*
+2. Requirements                                         *vim-hz-requirements*
+
+This plugin defines several snippets that are intended to be used with the
+snipMate (garbas/vim-snipmate) plugin.  If the plugin is not installed,
+however, this plugin still works.  It just doesn't provide snippets.
+
+
+=============================================================================
+3. Configurations                                     *vim-hz-configurations*
 
 -----------------------------------------------------------------------------
-2.1. Snippets                                                *vim-hz-snippets*
+3.1. Snippets                                                *vim-hz-snippets*
+
+snipMate snippets for languages I use frequently.  Each snippet file contains
+a lot of macros to help default snippet templates and get the cursor moved
+to the important parts quickly.
+
+3.1.1. C Snippets
+
+A collection of C language snippets for consistent formatting and style.  The
+snippets represent my personal coding style.  The following lists the keyword
+shortcuts in the c.snippets file:
+
+    Block-style comment templates:      c0, c1, c2, c3, c4, c5, c6
+    Bar-style comment separators:       b0, b1
+    A generic main() function template: main
+    Include pre-processor declaration:  inc
+    Function skeletons:                 fun, vfun, doxyfun
+    New source file:                    source
+    New header file:                    header
+
+3.1.2. C++ Snippets
+
+The C++ language snippets provide a few shortcuts specific to C++:
+
+    Method skeleton: meth
+    New source file: source
+    New header file: header
+
+3.1.3. Python Snippets
+
+    Block-style comment template: c0, c1, c2, c3, c4, c5, c6
+    Bar-style comment separators: b0, b1
+    Function/class skeletons:     fun, meth, class
+    Starter shell script:         shell
 
 -----------------------------------------------------------------------------
-2.2. Syntax                                                   *vim-hz-syntax*
+3.2. Syntax                                                   *vim-hz-syntax*
+
+This plugin adds to/overrides some of the built-in syntax matching for C,
+C++, JavaScript, PHP, Python, and C shell-style scripts (e.g. .cshrc).  The
+primary addition is the matching of operators.  A few other modifications are
+detailed in the following lists:
+
+3.2.1. C Syntax
+
+Add the following keywords under the "cType" highlight group:
+
+    boolean, sint8, sint16, sint32, sint64, uint8, uint16, uint32, uint64
+
+Also, match the following pattern for the "cType" highlight group:
+
+    [a-zA-Z_][a-zA-Z0-9_]+_t(ype|8|16|32)
+
+Add the following keywords under the "Constant" highlight group:
+
+    TRUE, FALSE, NULL
+
+A fairly robust pattern to match all C-style operators is also added to the
+"Operator" highlight group.  Of note, the highlight group also includes the
+strict type comparison operators ("===" and "!==") that are _not_ C language
+operators.  These are included only for JavaScript and PHP.
+
+Brackets, braces, and parenthesis are also added to the "Parens" highlight
+group.
+
+Generic function/method definitions and calls are added to the "Function"
+highlight group.
+
+3.2.2. C++ Syntax
+
+The C++ syntax merely uses the additions/modifications to the C syntax
+described above.
+
+3.2.3. JavaScript Syntax
+
+This plugin fixes the default syntax matching for fractional literals in
+JavaScript, and adds them to the "Constant" highlight group to be consistent
+with the other literal highlighting.
+
+The "javaScriptValue" and "javaScriptNull" highlight groups are linked to the
+"Constant" highlight group to make the syntax more consistent with other
+syntax highlighters.
+
+Finally, the JavaScript syntax makes use of the C-style operators to allow
+highlighting all operators.
+
+3.2.4. PHP Syntax
+
+The default PHP syntax definitions are the best I've seen in Vim so far.
+This plugin tweaks a few things that bugged me:
+
+The "$" for variable names has its own highlighter group, so I linked it to
+the "Identifier" group so it can be highlighted with the variable name.
+
+The "->" member dereference operator is linked to the "Operator" group.
+
+The comparison operators ("==", "===", "!=", and "!==") are linked to the
+"Operator" group.
+
+The default syntax doesn't pick up "," or ";", so I've added both of those
+to the "Operator" group.
+
+The "null" keyword is lumped in with PHP types, so I change the link so it
+is highlighted as a "Constant."
+
+For some crazy reason the string delimiters (" and ') are placed in the
+"None" group.  I just link the "None" group to "String" so PHP string
+literals are highlighted the same way they are in every other syntax.
+
+Originally, I had planned to need to use the C-style operator syntax
+pattern, but the built-in operator matching has worked well for me so far.
+
+3.2.5. Python Syntax
+
+This plugin adds "self" as a keyword under the "pythonBuiltin" group.  I
+realize "self" is not a formal language construct, but it's so ubiquitous I
+like seeing highlighted like it is.
+
+By default the keyword "None" is grouped with other built-in words.  I prefer
+it to be considered a "Constant."
+
+The default Python syntax does not concern itself with operators, so I also
+add the C-style operator matching to Python's syntax.  So far, it's worked
+well for my purposes.
 
