@@ -1,0 +1,218 @@
+# PHP Code Snippets
+
+# Comment Blocks
+snippet c0
+	/*----------------------------------------------------------------------------
+	${1}
+	----------------------------------------------------------------------------*/
+snippet c1
+	    /*------------------------------------------------------------------------
+	    ${1}
+	    ------------------------------------------------------------------------*/
+snippet c2
+	        /*--------------------------------------------------------------------
+	        ${1}
+	        --------------------------------------------------------------------*/
+snippet c3
+	            /*----------------------------------------------------------------
+	            ${1}
+	            ----------------------------------------------------------------*/
+snippet c4
+	                /*------------------------------------------------------------
+	                ${1}
+	                ------------------------------------------------------------*/
+snippet c5
+	                    /*--------------------------------------------------------
+	                    ${1}
+	                    --------------------------------------------------------*/
+snippet c6
+	                        /*----------------------------------------------------
+	                        ${1}
+	                        ----------------------------------------------------*/
+
+# Separator Bars
+snippet b0
+	/*==========================================================================*/
+snippet b1
+	    /*======================================================================*/
+
+# Function Skeletons
+snippet fun
+	/**
+	 *  ${2:description}
+	 *
+	 */
+	function ${1:name}() {
+	
+	    ${3}
+	}
+	
+snippet vfun
+	/**
+	 *  ${2:description}
+	 *
+	 *  @param param1 Description
+	 *  @param param2 Description
+	 *  @return       Description
+	 *  @throws       Exception
+	 */
+	function ${1:name}(
+	    $param1
+	    $param2
+	) {
+	
+	    ${3}
+	}
+	
+
+# Classes/Interfaces
+snippet class
+	/**
+	 *  ${2:description}
+	 */
+	class ${1:name} ${3:extends BaseClass} {
+	
+	    /**
+	     *  Constructor.
+	     */
+	    public function __construct(
+	        $param
+	    ) {
+	        parent::__construct( $param );
+	    }
+	
+	    ${4}
+	
+	}
+snippet iface
+	/**
+	 *  ${2:description}
+	 */
+	interface ${1:name} ${3:extends BaseInterface} {
+	
+	    ${4}
+	
+	}
+	
+snippet exc
+	/**
+	 *  ${2:description}
+	 */
+	class ${1:name} extends Exception {
+	
+	    /**
+	     *  Exception constructor.
+	     *
+	     *  @param message  Exception message
+	     *  @param code     Numerical exception code (optional)
+	     *  @param previous Previous exception (optional)
+	     */
+	    public function __construct(
+	        $message,
+	        $code               = 0,
+	        Exception $previous = null
+	    ) {
+	        parent::__construct( $message, $code, $previous );
+	    }
+	}
+	
+snippet meth
+	    /**
+	     *  ${2:description}
+	     *
+	     */
+	    public function ${1:name}() {
+	
+	        ${3}
+	    }
+	
+
+
+# Source
+snippet source
+	<?php
+	/*****************************************************************************
+	
+	${1:`Filename()`}.php
+	
+	${2:description}
+	
+	*****************************************************************************/
+
+	/*----------------------------------------------------------------------------
+	Dependencies
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Default Namespace
+	----------------------------------------------------------------------------*/
+	
+	namespace ${3:library}\${4:module}
+	
+	/*----------------------------------------------------------------------------
+	Classes
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Functions
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Execution
+	----------------------------------------------------------------------------*/
+	
+	${3}
+	
+	?>
+
+# Supporting HTML
+snippet html
+	<!doctype html>
+	<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <title>${1:Title}</title>
+	  <link rel="stylesheet" href="styles.css">
+	  <script src="script.js"></script>
+	</head>
+	<body>
+	  ${2}
+	</body>
+	</html>
+
+# Supporting CSS
+snippet css
+	    /* rendering */
+	    body { margin: 0; padding: 0; }
+	    h1, h2, h3, h4, h5, h6, p, address, blockquote, pre, ul, ol, dl, form {
+	      margin: 0.5em 0;
+	      padding: 0;
+	    }
+	    li { margin: 0 0 0 2em; }
+	    blockquote { margin: 0.5em 1em; padding: 0 1em; border-left: solid 1px; }
+	    img { border: none; }
+	    table { border-collapse: collapse; border-spacing: 0; }
+	    hr { margin: 0.1em 0; border: none; border-top: 1px solid; }
+	
+	    /* typography */
+	    body {
+	      font: 12pt/130% 'Source Sans Pro', Arial, Helvetica, sans-serif;
+	    }
+	    h1, h2, h3, h4, h5, h6 {
+	      font-family: 'Droid Sans', Tahoma, Geneva, sans-serif;
+	    }
+	    h1 { font-size: 150%; }
+	    h2 { font-size: 140%; }
+	    h3 { font-size: 130%; }
+	    h4 { font-size: 120%; }
+	    h5 { font-size: 110%; }
+	    h6 { font-size: 100%; }
+	
+	    /* colors */
+	    body { color: #333333; background-color: #FFFFFF; }
+	    h1, h2, h3, h4, h5, h6 { color: #333333; }
+	    a { color: #0000CC; }
+	    a:visited { color: #000066; }
+	    a:hover { color: #0066FF; }
+	    hr, blockquote { border-color: #CCCCCC; }
+
