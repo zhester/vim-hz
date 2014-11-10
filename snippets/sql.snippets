@@ -1,0 +1,221 @@
+# SQL Snippets
+
+# Separator Bars
+snippet b0
+	/*==========================================================================*/
+snippet b1
+	    /*======================================================================*/
+
+# Comment Blocks
+snippet c0
+	/*----------------------------------------------------------------------------
+	${1}
+	----------------------------------------------------------------------------*/
+snippet c1
+	    /*------------------------------------------------------------------------
+	    ${1}
+	    ------------------------------------------------------------------------*/
+snippet c2
+	        /*--------------------------------------------------------------------
+	        ${1}
+	        --------------------------------------------------------------------*/
+snippet c3
+	            /*----------------------------------------------------------------
+	            ${1}
+	            ----------------------------------------------------------------*/
+snippet c4
+	                /*------------------------------------------------------------
+	                ${1}
+	                ------------------------------------------------------------*/
+snippet c5
+	                    /*--------------------------------------------------------
+	                    ${1}
+	                    --------------------------------------------------------*/
+snippet c6
+	                        /*----------------------------------------------------
+	                        ${1}
+	                        ----------------------------------------------------*/
+
+# Select Skeleton
+
+snippet select
+	select
+	    ${1:COLUMNS}
+	from
+	    ${2:TABLE} as t
+	    left join ${3:T2} as t2
+	where
+	    ${4:CLAUSE}
+	group by
+	    ${5:GROUP_COLUMS}
+	limit
+	    ${6:OFFSET}, ${7:LENGTH}
+
+# Table Skeleton
+
+snippet table
+	create table ${1:NAME} (
+	    id                   bigint unsigned not null auto_increment,
+	    ${2}
+	    primary key( id )
+	) engine = MyISAM;
+
+# Common Column/Key Definitions
+
+snippet time
+	    created              timestamp default current_timestamp,
+	    modified             timestemp default current_timestamp
+	                             on update current_timestamp,
+	    ${1}
+	    key( created ),
+	    key( modified )
+
+snippet string
+	    ${1:COLUMN}          varchar( ${2:255} ) not null default ''
+
+snippet ftk
+	    fulltext( ${1:COLUMN} )
+
+snippet fk
+	    foreign key( ${1:COLUMN} ) references ${2:FTABLE}( ${3:FCOLUMN} )
+
+# Stored Procedures
+
+snippet fun
+	/*----------------------------------------------------------------------------
+	
+	    ${1:NAME}
+	
+	    ${2:DESCRIPTION}
+	
+	----------------------------------------------------------------------------*/
+	
+	delimiter $$
+	
+	drop function if exists $1 $$
+	
+	create function $1(
+	    bar                  int
+	)
+	    returns int deterministic
+	    begin
+	
+	        -- Local variables
+	        declare foo      int default 0;
+	
+	        -- Return result.
+	        return foo + bar;
+	
+	    end $$
+	
+	delimiter ;
+	
+
+snippet vfun
+	/*----------------------------------------------------------------------------
+	
+	    ${1:NAME}
+	
+	    @param  bar An input to the function
+	    @return     Result of messing with foo
+	
+	    ${2:DESCRIPTION}
+	
+	----------------------------------------------------------------------------*/
+	
+	delimiter $$
+	
+	drop function if exists $1 $$
+	
+	create function $1(
+	    bar                  int
+	)
+	    returns int deterministic
+	    -- returns int reads sql data
+	    -- returns int writes sql data
+	    begin
+	
+	        -- Local variables
+	        declare foo      int default 0;
+	
+	        -- Do something simple.
+	        set foo = 1;
+	
+	        -- Increment foo a couple times.
+	        while foo < 10 do
+	            set foo = foo + 1
+	        end while;
+	
+	        -- Test foo for some reason.
+	        if foo < 10 then
+	            set foo = 10;
+	        elseif foo > 10 then
+	            set foo = 10;
+	        else
+	            set foo = 10;
+	        end if;
+	
+	        -- Return result.
+	        return foo;
+	
+	    end $$
+	
+	delimiter ;
+	
+
+# Triggers
+
+snippet tbi
+	/*----------------------------------------------------------------------------
+	
+	    tbi_${1:TABLENAME}
+	
+	    ${2:DESCRIPTION}
+	
+	----------------------------------------------------------------------------*/
+	
+	delimiter $$
+	
+	drop trigger if exists tbi_$1$$
+	
+	create trigger tbi_$1
+	    before insert on $1 for each row
+	    before
+	        set new.${3:COLUMN} = ${4:VALUE};
+	    end $$
+	
+	delimiter ;
+	
+
+snippet tbu
+	/*----------------------------------------------------------------------------
+	
+	    tbu_${1:TABLENAME}
+	
+	    ${2:DESCRIPTION}
+	
+	----------------------------------------------------------------------------*/
+	
+	delimiter $$
+	
+	drop trigger if exists tbu_$1$$
+	
+	create trigger tbu_$1
+	    before update on $1 for each row
+	    before
+	        set new.${3:COLUMN} = ${4:VALUE};
+	    end $$
+	
+	delimiter ;
+	
+
+# Schemas
+
+snippet schema
+	/*****************************************************************************
+	
+	${1}
+	
+	*****************************************************************************/
+	
+
