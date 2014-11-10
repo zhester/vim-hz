@@ -57,8 +57,9 @@ snippet table
 	/*----------------------------------------------------------------------------
 	${2:DESCRIPTION}
 	----------------------------------------------------------------------------*/
-	create table ${1:NAME} (
-
+	drop table if exists ${1:NAME};
+	create table $1 (
+	
 	    /*------------------------------------------------------------------------
 	    Referential Columns
 	    ------------------------------------------------------------------------*/
@@ -80,7 +81,7 @@ snippet table
 
 snippet time
 	    created             timestamp default current_timestamp,
-	    modified            timestemp default current_timestamp
+	    modified            timestamp default current_timestamp
 	                            on update current_timestamp,
 	    ${1}
 	    key( created ),
