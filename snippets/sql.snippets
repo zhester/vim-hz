@@ -55,7 +55,7 @@ snippet select
 
 snippet table
 	create table ${1:NAME} (
-	    id                   bigint unsigned not null auto_increment,
+	    id                  bigint unsigned not null auto_increment,
 	    ${2}
 	    primary key( id )
 	) engine = MyISAM;
@@ -63,15 +63,15 @@ snippet table
 # Common Column/Key Definitions
 
 snippet time
-	    created              timestamp default current_timestamp,
-	    modified             timestemp default current_timestamp
-	                             on update current_timestamp,
+	    created             timestamp default current_timestamp,
+	    modified            timestemp default current_timestamp
+	                            on update current_timestamp,
 	    ${1}
 	    key( created ),
 	    key( modified )
 
 snippet string
-	    ${1:COLUMN}          varchar( ${2:255} ) not null default ''
+	    ${1:COLUMN}         varchar( ${2:255} ) not null default ''
 
 snippet ftk
 	    fulltext( ${1:COLUMN} )
@@ -95,13 +95,13 @@ snippet fun
 	drop function if exists $1 $$
 	
 	create function $1(
-	    bar                  int
+	    bar                 int
 	)
 	    returns int deterministic
 	    begin
 	
 	        -- Local variables
-	        declare foo      int default 0;
+	        declare foo     int default 0;
 	
 	        -- Return result.
 	        return foo + bar;
@@ -128,7 +128,7 @@ snippet vfun
 	drop function if exists $1 $$
 	
 	create function $1(
-	    bar                  int
+	    bar                 int
 	)
 	    returns int deterministic
 	    -- returns int reads sql data
@@ -136,7 +136,7 @@ snippet vfun
 	    begin
 	
 	        -- Local variables
-	        declare foo      int default 0;
+	        declare foo     int default 0;
 	
 	        -- Do something simple.
 	        set foo = 1;
