@@ -1,0 +1,121 @@
+#=============================================================================
+# Markdown Document Snippets/Reminders
+#=============================================================================
+
+#=============================================================================
+# Standard Blocks
+
+snippet h1
+	`repeat( '=', strlen( getline( line( '.' ) - 1 ) ) )`
+	
+	${1}
+
+snippet h2
+	`repeat( '-', strlen( getline( line( '.' ) - 1 ) ) )`
+	
+	${1}
+
+snippet ih1
+	# ${1}
+	
+
+snippet ih2
+	## ${1}
+	
+
+snippet ih3
+	### ${1}
+	
+
+snippet ih4
+	#### ${1}
+	
+
+snippet ih5
+	##### ${1}
+	
+
+snippet ih6
+	###### ${1}
+	
+
+snippet block
+	> ${1}
+	
+
+snippet ul
+	- ${1}
+	
+
+snippet ol
+	1. ${1}
+	
+
+snippet code
+	    ${1}
+	
+
+snippet hr
+	* * *
+	
+
+#=============================================================================
+# Standard Inlines
+
+snippet a
+	[${1:text}](${2:url})
+
+snippet at
+	[${1:text}](${2:url} "${3:title}")
+
+snippet r
+	[${1:text}][${2:id}]
+	[$2]: ${3:url}
+
+snippet rt
+	[${1:text}][${2:id}]
+	[$2]: ${3:url} "${4:title}"
+
+snippet img
+	![${1:alt}](${2:path})
+
+snippet imgt
+	![${1:alt}](${2:path} "${3:title}")
+
+snippet i
+	\`${1}\`
+
+snippet em
+	_${1}_
+
+snippet strong
+	**${1}**
+
+snippet escapes
+	\\\`*_{}[]()#+-.!
+
+#=============================================================================
+# Github Flavor
+
+snippet table
+	
+	| ${1:column_a} | ${2:column_b} | ${3:column_c} |
+	| -------- |:--------:| --------:|
+	| ${4:left}     | ${5:center}   | ${6:right}    |
+	
+
+snippet fence
+	
+	\`\`\`${2:language}
+	${1}
+	\`\`\`
+
+snippet strike
+	~~${1}~~
+
+#=============================================================================
+# Hz Flavor
+
+snippet b
+	*${1}*
+
