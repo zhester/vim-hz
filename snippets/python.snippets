@@ -47,6 +47,13 @@ snippet fun
 	    ${2:description}
 	    """
 	    ${3:pass}
+snippet funargs
+	#=============================================================================
+	def ${1:name}( *args, **kwargs ):
+	    """
+	    ${2:description}
+	    """
+	    ${3:pass}
 snippet meth
 	    #=========================================================================
 	    def ${1:name}( self ):
@@ -62,13 +69,64 @@ snippet class
 	    """
 	
 	    #=========================================================================
+	    def __init__( self ):
+	        """
+	        Initializes a $1 object.
+	        """
+	        super( $1, self ).__init__()
+	
+snippet classargs
+	#=============================================================================
+	class ${1:name}( object ):
+	    """
+	    ${2:description}
+	    """
+	
+	    #=========================================================================
 	    def __init__( self, *args, **kwargs ):
 	        """
 	        Initializes a $1 object.
 	        """
 	        super( $1, self ).__init__( *args, **kwargs )
 	
-
+snippet dict
+	#=============================================================================
+	class ${1:name}( dict ):
+	    """
+	    ${2:description}
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, *args, **kwargs ):
+	        """
+	        Initializes a $1 dictionary object.
+	        """
+	        super( $1, self ).__init__( *args, **kwargs )
+	
+	
+	    #=========================================================================
+	    def __delitem__( self, key ):
+	        """"
+	        Implements index notation for deleting items from the dictionary.
+	        """"
+	        super( $1, self ).__delitem__( key )
+	
+	
+	    #=========================================================================
+	    def __getitem__( self, key ):
+	        """"
+	        Implements index notation for getting items from the dictionary.
+	        """"
+	        return super( $1, self ).__getitem__( key )
+	
+	
+	    #=========================================================================
+	    def __setitem__( self, key, value ):
+	        """"
+	        Implements index notation for setting items in the dictionary.
+	        """"
+	        super( $1, self ).__setitem__( key, value )
+	
 
 # Generic Shell Script
 snippet shell
@@ -122,11 +180,102 @@ snippet shell
 	    ${2}
 	
 	    # return success
-	    return 0
+	    return os.EX_OK
 	
 	
 	#=============================================================================
 	if __name__ == "__main__":
+	    import os
 	    import sys
 	    sys.exit( main( sys.argv ) )
 	
+
+# Reminders
+snippet magic
+	# http://www.rafekettler.com/magicmethods.html
+	# construction/destruction
+	__new__( cls, ... )
+	__init__( self, ... )
+	__del__( self )
+	# sequence-style access control
+	__len__( self )
+	__getitem__( self )
+	__setitem__( self )
+	__delitem__( self )
+	__iter__( self )
+	__reversed__( self )
+	__contains__( self )
+	__missing__( self )
+	# attribute-style access control
+	__getattr__( self, name )
+	__setattr__( self, name, value )
+	__delattr__( self, name )
+	__getattribute__( self, name )
+	# descriptors
+	__get__( self, instance, owner )
+	__set__( self, instance, value )
+	__delete__( self, instance )
+	# representations
+	__str__( self )
+	__repr__( self )
+	__unicode__( self )
+	__format__( self, formatstr )
+	__hash__( self )
+	__nonzero__( self )
+	__dir__( self )
+	__sizeof__( self )
+	# contexts
+	__enter__( self )
+	__exit__( self, exception_type, exception_value, traceback )
+	# comparison
+	__cmp__( self, other )
+	__eq__( self, other )
+	__ne__( self, other )
+	__lt__( self, other )
+	__gt__( self, other )
+	__le__( self, other )
+	__ge__( self, other )
+	# type conversion
+	__int__( self )
+	__long__( self )
+	__float__( self )
+	__complex__( self )
+	__oct__( self )
+	__hex__( self )
+	__index__( self )
+	__trunc__( self )
+	__coerce__( self, other )
+	# copying
+	__copy__( self )
+	__deepcopy__( self, memodict = {} )
+	# numeric, unary operations
+	__pos__( self )
+	__neg__( self )
+	__abs__( self )
+	__invert__( self )
+	__round__( self, n )
+	__floor__( self )
+	__ceil__( self )
+	__trunc__( self )
+	# numeric, arithmetic operations
+	__add__( self, other)
+	__sub__( self, other)
+	__mul__( self, other)
+	__floordiv__( self, other)
+	__div__( self, other)
+	__truediv__( self, other)
+	__mod__( self, other)
+	__divmod__( self, other)
+	__pow__( self )
+	__lshift__( self, other)
+	__rshift__( self, other)
+	__and__( self, other)
+	__or__( self, other)
+	__xor__( self, other)
+	# numeric, reflected arithmetic operations (TBD)
+	# augmented assignment (TBD)
+	# reflection (TBD)
+	# callable objects (TBD)
+	# pickling (TBD)
+
+
