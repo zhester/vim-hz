@@ -24,7 +24,8 @@ let cOperatorList .=     '\1\?'         " Followed by (optionally) the exact
 let cOperatorList .= '\|'               " Next option:
 let cOperatorList .=     '->'           " Pointer dereference operator
 let cOperatorList .= '\|'               " Next option:
-let cOperatorList .=     '[-+*/%&^|!]=' " One of the listed symbols followed by
+let cOperatorList .=     '[-+*/%&^|!<>~]='
+                                        " One of the listed symbols followed by
                                         "   an =, e.g. +=, -=, &= etc
 let cOperatorList .= '\|'               " Next option:
 let cOperatorList .=     '[*/?:,.!~%]'  " Some simple single character operators
