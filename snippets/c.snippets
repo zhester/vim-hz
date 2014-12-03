@@ -38,13 +38,49 @@ snippet b1
 
 # main()
 snippet main
-	/*--------------------------------------------------------------------
-	Program Entry Point
-	--------------------------------------------------------------------*/
-	int main( int argc, const char** argv ) {
-		${1}
-		return 0;
+	/*==========================================================================*/
+	int main(                               /* program entry point              */
+	    int                 argc,           /* number of arguments              */
+	    const char**        argv            /* list of arguments                */
+	) {                                     /* return program exist status      */
+	
+	    /*------------------------------------------------------
+	    Comment.
+	    ------------------------------------------------------*/
+	    ${1}
+	
+	    /*------------------------------------------------------
+	    Return to the shell.
+	    ------------------------------------------------------*/
+	    return EXIT_SUCCESS;
 	}
+	
+
+snippet winmain
+	/*==========================================================================*/
+	int WINAPI WinMain(                     /* program entry point              */
+	    HINSTANCE           hInstance,      /* handle to program instance       */
+	    HINSTANCE           hPrevInst,      /* handle to previous instance      */
+	    LPTSTR              lpCmdLine,      /* pointer to command-line string   */
+	    int                 nShowCmd        /* initial window display setting   */
+	) {                                     /* return program exit status       */
+	
+	    /*------------------------------------------------------
+	    Display a message.
+	    ------------------------------------------------------*/
+	    MessageBoxW(
+	        NULL,
+	        L"Hello World!",
+	        L"Greetings",
+	        ( MB_OK | MB_ICONINFORMATION )
+	    );
+	
+	    /*------------------------------------------------------
+	    Return to the shell.
+	    ------------------------------------------------------*/
+	    return EXIT_SUCCESS;
+	}
+	
 
 # #include "..."
 snippet inc
@@ -53,13 +89,19 @@ snippet inc
 # Function Skeletons
 snippet fun
 	/*==========================================================================*/
-	int ${1:name}(                      //${2:description}
-	    int                 param       //${3:param}
-	) {                                 //${4:returns}
+	int ${1:name}(                       /* ${2:description}                    */
+	    int                 param        /* ${3:param}                          */
+	) {                                  /* ${4:returns}                        */
+	
+	    /*------------------------------------------------------
+	    Local Variables
+	    ------------------------------------------------------*/
+	    int                 local        /* a local variable                    */
 	
 	    ${5}
 	}
 	
+
 snippet vfun
 	/*==========================================================================*/
 	int ${1:name}(                      //description
@@ -193,6 +235,10 @@ snippet source
 	
 	/*----------------------------------------------------------------------------
 	Module Prototypes
+	----------------------------------------------------------------------------*/
+	
+	/*----------------------------------------------------------------------------
+	Implementation
 	----------------------------------------------------------------------------*/
 	
 	${3}
