@@ -1,0 +1,28 @@
+Syntax Color Preview File
+=========================
+
+Setting Foregrounds with `none` Backgrounds
+-------------------------------------------
+
+background( none ) {
+
+       |black  |red    |green  |yellow |blue   |magenta|cyan   |white  |
+Normal |FG0    |FG1    |FG2    |FG3    |FG4    |FG5    |FG6    |FG7    |
+Bright |FG8    |FG9    |FGA    |FGB    |FGC    |FGD    |FGE    |FGF    |
+
+}
+
+Setting Backgrounds with `none` Foregrounds
+-------------------------------------------
+
+foreground( none ) {
+
+       |black  |red    |green  |yellow |blue   |magenta|cyan   |white  |
+Normal |BG0    |BG1    |BG2    |BG3    |BG4    |BG5    |BG6    |BG7    |
+Bright |BG8    |BG9    |BGA    |BGB    |BGC    |BGD    |BGE    |BGF    |
+
+}
+
+Setting Style Bits `none`, `underline`, `bold`
+----------------------------------------------
+
