@@ -43,9 +43,20 @@ hi colorsFGE    cterm=none      ctermbg=none    ctermfg=14
 hi colorsFGF    cterm=none      ctermbg=none    ctermfg=15
 
 " Create background modifying patterns.
-syn match colorsBackgroundNone display 'background(\s*none\s*)\s*{[^}]*}'
-syn match colorsBackgroundNone display 'background(\s*0\s*)\s*{[^}]*}'
+syn match colorsBGNone display 'background(\s*none\s*)\s*{[^}]*}'
+syn match colorsBG0 display 'background(\s*0\s*)\s*{[^}]*}'
 
 hi colorsBGNone cterm=none      ctermbg=none    ctermfg=none
 hi colorsBG0    cterm=none      ctermbg=0       ctermfg=none
+
+" A function for generating a color pallette display.
+function! ColorsDraw()
+    let num = 1
+    while num < 16
+        exec 'hi colors_' . num . ' ctermbg=' . num . ' ctermfg=15'
+        exec 'syn match colors_' . num . ' "# ' . num . ' #" containedIn=ALL'
+        call append( line( '.' ), '# ' . num . ' #' )
+        let num = num + 1
+    endwhile
+endfunction
 
