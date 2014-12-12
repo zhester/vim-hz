@@ -52,10 +52,11 @@ hi colorsBG0    cterm=none      ctermbg=0       ctermfg=none
 " A function for generating a color pallette display.
 function! ColorsDraw()
     let num = 1
+    let lnum = line( '.' )
     while num < 16
         exec 'hi colors_' . num . ' ctermbg=' . num . ' ctermfg=15'
         exec 'syn match colors_' . num . ' "# ' . num . ' #" containedIn=ALL'
-        call append( line( '.' ), '# ' . num . ' #' )
+        call append( ( lnum + ( num - 1 ) ), '# ' . num . ' #' )
         let num = num + 1
     endwhile
 endfunction
