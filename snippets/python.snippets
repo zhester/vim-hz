@@ -127,6 +127,13 @@ snippet dict
 	        """"
 	        super( $1, self ).__setitem__( key, value )
 	
+snippet error
+	#=============================================================================
+	class ${1:name}( RuntimeError ):
+	    """
+	    ${2:description}
+	    """
+	    pass
 
 # Generic Shell Script
 snippet shell
