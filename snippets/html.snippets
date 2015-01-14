@@ -1,0 +1,205 @@
+# HTML Snippets
+
+# Separator Bars
+snippet b0
+	<!-- ===================================================================== -->
+snippet b1
+	  <!-- =================================================================== -->
+
+# Comment Blocks
+snippet c0
+	<!-- -------------------------------------------------------------------------
+	${1}
+	-------------------------------------------------------------------------- -->
+snippet c1
+	  <!-- -----------------------------------------------------------------------
+	  ${1}
+	  ------------------------------------------------------------------------ -->
+
+# Starter Document
+snippet html
+	<!doctype html>
+	<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <title>Title</title>
+	  <link rel="stylesheet" href="styles.css">
+	  <script src="script.js"></script>
+	</head>
+	<body>
+	  ${1}
+	</body>
+	</html>
+
+# Simple/Development App Template
+snippet app
+	<!doctype html>
+	<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <title>App</title>
+	  <style>
+	    body { font: 12pt/130% 'Source Sans Pro',Arial,sans-serif; }
+	  </style>
+	  <script>
+	    window.addEventListener(
+	      'load',
+	      function( e ) {
+	        ${1}
+	      },
+	      false
+	    );
+	  </script>
+	</head>
+	<body>
+	  ${2}
+	</body>
+	</html>
+
+# Starter XHTML Document
+snippet xhtml
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Title</title>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<script type="text/javascript" src="script.js"></script>
+	</head>
+	<body>
+	<div id="root">
+	  <div id="header">
+	    <h1>Title</h1>
+	  </div>
+	  <div id="body">
+	  </div>
+	  <div id="footer">
+	    <p>&copy;2013</p>
+	  </div>
+	</div>
+	</body>
+	</html>
+
+# Inline CSS for XHTML
+snippet xcss
+	<style type="text/css"><![CDATA[
+	  ${1}
+	]]></style>
+
+# Inline JavaScript for XHTML
+snippet xjs
+	<script type="text/javascript"<![CDATA[
+	  ${1}
+	]]></script>
+
+# Table Blank
+snippet table
+	<table>
+	  <tbody>
+	    <tr>
+	      <th>${1:heading}</th>
+	    </tr>
+	    <tr>
+	      <td>${2:data}</td>
+	    </tr>
+	  </tbody>
+	</table>
+
+# Definition List Blank
+snippet dl
+	<dl>
+	  <dt>${1:term}</dt>
+	  <dd>${2:definition}</dd>
+	</dl>
+
+# Unordered List Blank
+snippet ul
+	<ul>
+	  <li>${1:item}</li>
+	</ul>
+
+# Ordered List Blank
+snippet ol
+	<ol>
+	  <li>${1:item}</li>
+	</ol>
+
+# Tag Blanks
+snippet a
+	<a href="${1:url}" title="${2:title}">${3:Link}</a>
+snippet img
+	<img src="${1:url}" title="${2:title}" alt="$2">
+snippet input
+	<input type="${1:text}" name="${2:name}" id="$2"${3}>
+
+# Form Blank
+snippet form
+	<form action="${1:uri}" method="${2:post}">
+	  <fieldset>
+	    <legend>${3:Fields}</legend>
+	    <p>
+	      <label><span>${4:Input}</span><input type="text" name="input"></label>
+	      <input type="submit" value="Submit">
+	    </p>
+	  </fieldset>
+	</form>
+
+# Radio Button Blank
+snippet radio
+	<fieldset>
+	  <legend>${1:Selection}</legend>
+	  <ul>
+	    <li>
+	      <input type="radio" name="${2:radio}" id="$2_a">
+	      <label for="$2_a">${3:Option A}</label>
+	    </li>
+	    <li>
+	      <input type="radio" name="$2" id="$2_b">
+	      <label for="$2_b">${4:Option B}</label>
+	    </li>
+	    <li>
+	      <input type="radio" name="$2" id="$2_c">
+	      <label for="$2_c">${5:Option C}/label>
+	    </li>
+	  </ul>
+	</fieldset>
+
+# Select Widget Blank
+snippet select
+	<select name="${1:name}" id="$1">
+	  <option value="${2:value}">${3:Value}</option>
+	</select>
+
+# Content Sections
+snippet s1
+	<h1>${1:title}</h1>
+	<p>
+	${2}
+	</p>
+snippet s2
+	<h2>${1:title}</h2>
+	<p>
+	${2}
+	</p>
+snippet s3
+	<h3>${1:title}</h3>
+	<p>
+	${2}
+	</p>
+snippet s4
+	<h4>${1:title}</h4>
+	<p>
+	${2}
+	</p>
+snippet s5
+	<h5>${1:title}</h5>
+	<p>
+	${2}
+	</p>
+snippet s6
+	<h6>${1:title}</h6>
+	<p>
+	${2}
+	</p>
+
