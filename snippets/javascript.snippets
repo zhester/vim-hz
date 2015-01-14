@@ -4,7 +4,7 @@
 snippet b0
 	/*--------------------------------------------------------------------------*/
 snippet b1
-	    /*----------------------------------------------------------------------*/
+	  /*------------------------------------------------------------------------*/
 
 # Blocky Comments
 snippet c0
@@ -12,15 +12,15 @@ snippet c0
 	${1}
 	----------------------------------------------------------------------------*/
 snippet c1
+	  /*--------------------------------------------------------------------------
+	  ${1}
+	  --------------------------------------------------------------------------*/
+snippet c2
 	    /*------------------------------------------------------------------------
 	    ${1}
 	    ------------------------------------------------------------------------*/
-snippet c2
-	        /*--------------------------------------------------------------------
-	        ${1}
-	        --------------------------------------------------------------------*/
 
-# Function
+# Functions
 snippet fun
 	/**
 	 *  ${2:description}
@@ -28,7 +28,7 @@ snippet fun
 	 */
 	function ${1:name}() {
 	
-	    ${3}
+	  ${3}
 	}
 snippet vfun
 	/**
@@ -40,27 +40,29 @@ snippet vfun
 	 */
 	function ${1:name}( param ) {
 	
-	    ${3}
+	  ${3}
 	
-	    return false;
+	  return false;
 	}
+
+# Other Structured Things
 snippet class
 	/*----------------------------------------------------------------------------
 	${2:description}
 	----------------------------------------------------------------------------*/
 	${1:name} = ( function( ns ) {
 	
-	    ${3}
+	  ${3}
 	
-	    return ns;
+	  return ns;
 	} )( $1 || {} );
 snippet event
 	${1:object}.addEventListener(
-	    '${2:event}',
-	    function( event ) {
-	        ${3}
-	    },
-	    false
+	  '${2:event}',
+	  function( event ) {
+	    ${3}
+	  },
+	  false
 	);
 snippet arg
 	var ${1:name} = arguments.length > ${2:0} ? arguments[ $2 ];
@@ -75,25 +77,51 @@ snippet main
 	 */
 	function main( argv ) {
 	
-	    //Begin script execution.
-	    ${1}
+	  //Begin script execution.
+	  ${1}
 	
-	    //Return normal termination status.
-	    return true;
+	  //Return normal termination status.
+	  return true;
 	}
 	
 	//Run the script's entry point once the page has loaded.
 	window.addEventListener(
-	    'load',
-	    function( event ) {
-	        if( 'main' in window ) {
-	            var hash = window.location.hash.replace( /^#/, '' );
-	            var argv = hash.split( /(?:[+\s]|%20)*(?<!\),(?:[+\s]|%20)*/ );
-	            window.main.apply( window, argv );
-	        }
-	    },
-	    false
+	  'load',
+	  function( event ) {
+	    if( 'main' in window ) {
+	      var hash = window.location.hash.replace( /^#/, '' );
+	      var argv = hash.split( /(?:[+\s]|%20)*(?<!\),(?:[+\s]|%20)*/ );
+	      window.main.apply( window, argv );
+	    }
+	  },
+	  false
 	);
+
+# Quick-and-dirty HTTP GET Expecting JSON
+snippet http
+	var HTTP = function( callback ) {
+	  this.xhr = new XMLHttpRequest();
+	  this.xhr.timeout   = 60 * 1000;
+	  this.xhr.onabort   = function( e ) { throw new Error( 'XHR aborted.' ); };
+	  this.xhr.onerror   = function( e ) { throw new Error( 'XHR error.' ); };
+	  this.xhr.ontimeout = function( e ) { throw new Error( 'XHR timed out.' ); };
+	  this.xhr.onload    = function( callback ) {
+	    return function( e ) {
+	      var rctype = this.getResponseHeader( 'content-type' );
+	      var ectype = 'application/json';
+	      if( rctype.substr( 0, ectype.length ) != ectype ) {
+	        throw new Error( "Invalid content type: " + rctype );
+	      }
+	      callback( JSON.parse( this.responseText ) );
+	    }
+	  }( callback );
+	  this.get = function( url ) {
+	    this.xhr.open( 'GET', url, true );
+	    this.xhr.send( null );
+	  };
+	};
+	//var h = new HTTP( function( j ) { console.log( JSON.stringify( j ) ); } );
+	//h.get( 'example.json' );
 
 # Library submodule source
 snippet library
@@ -159,4 +187,15 @@ snippet source
 	----------------------------------------------------------------------------*/
 	
 
+# Various API Time-savers
+snippet gi
+	document.getElementById( '${1:id}' );
+snippet gt
+	${2:document}.getElementsByTagName( '${1:tag}' );
+snippet ce
+	document.createElement( '${1:tag}' );
+snippet ct
+	document.createTextNode( '${1:text}' );
+snippet at
+	.appendChild( document.createTextNode( '${1:text}' ) );
 
