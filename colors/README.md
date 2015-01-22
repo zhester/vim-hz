@@ -58,5 +58,16 @@ Vim Documentation
 
 See :help highlight-groups
 
+Reminders to Self
+-----------------
+
+View the defined color settings for any highlight group:
+
+    :set GROUPNAME
+
+View the highlight group(s) for the text under the cursor (from .vimrc):
+
+    SPACE y
+
 [1]: http://ethanschoonover.com/solarized
 
