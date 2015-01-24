@@ -77,7 +77,7 @@ hi WildMenu         cterm=bold      ctermbg=11      ctermfg=3
 " hi TabLine          cterm=none      ctermbg=none    ctermfg=none
 " hi TabLineFill      cterm=none      ctermbg=none    ctermfg=none
 " hi TabLineSel       cterm=none      ctermbg=none    ctermfg=none
-" hi VertSplit        cterm=none      ctermbg=none    ctermfg=none
+hi VertSplit        cterm=none      ctermbg=11      ctermfg=12
 
 "-----------------------------------------------------------------------------
 " In-buffer Highlighting
