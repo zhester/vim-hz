@@ -1,5 +1,12 @@
-# Python Code Snippets
+##############################################################################
+#
+# Python Snippets
+#
+##############################################################################
 
+#=============================================================================
+# Structural Comments
+#=============================================================================
 
 # Separator Bars
 snippet b0
@@ -7,8 +14,7 @@ snippet b0
 snippet b1
 	    #=========================================================================
 
-
-# Blocky Comments
+# Section Comments
 snippet c0
 	#-----------------------------------------------------------------------------
 	# ${1}
@@ -38,6 +44,9 @@ snippet c6
 	                        # ${1}
 	                        #-----------------------------------------------------
 
+#=============================================================================
+# Function and Class Templates
+#=============================================================================
 
 # Function/Class Skeletons
 snippet fun
@@ -129,11 +138,835 @@ snippet dict
 	
 snippet error
 	#=============================================================================
-	class ${1:name}( RuntimeError ):
+	class ${1:ModuleError}( RuntimeError ):
 	    """
 	    ${2:description}
 	    """
 	    pass
+
+#-----------------------------------------------------------------------------
+# Python Protocol Templates
+#-----------------------------------------------------------------------------
+
+# Descriptor Template
+snippet descriptor
+	#=============================================================================
+	class ${1:Descriptor}( object ):
+	    """
+	    ${2:A Descriptor}
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, name, doc = '' ):
+	        """
+	        Initializes a $1 object.
+	
+	        @param name The name of the object's property
+	        @param doc  The property's docstring
+	        """
+	        super( $1, self ).__init__()
+	        self._name   = name
+	        self.__doc__ = doc
+	
+	
+	    #=========================================================================
+	    def __delete__( self, obj ):
+	        """
+	        Deletes the described property from the object.
+	
+	        @param obj The property's owner instance
+	        """
+	        if hasattr( obj, self._name ) == False:
+	            raise AttributeError(
+	                'Unable to delete unknown property "{}".'.format( self._name )
+	            )
+	        delattr( obj, self._name )
+	
+	
+	    #=========================================================================
+	    def __get__( self, obj, objtype = None ):
+	        """
+	        Returns the value of the described property.
+	
+	        @param obj     The property's owner instance
+	        @param objtype The owner instance's type or class
+	        @return        The return value of the specified getter method
+	        """
+	        if obj is None:
+	            return self
+	        if hasattr( obj, self._name ) == False:
+	            raise AttributeError(
+	                'Unable to get unknown property "{}".'.format( self._name )
+	            )
+	        return getattr( obj, self._name )
+	
+	
+	    #=========================================================================
+	    def __set__( self, obj, value ):
+	        """
+	        Modifies the value of the described property.
+	
+	        @param obj   The property's owner instance
+	        @param value The value to pass to the specified setter method
+	        """
+	        if hasattr( obj, self._name ) == False:
+	            raise AttributeError(
+	                'Unable to set unknown property "{}".'.format( self._name )
+	            )
+	        setattr( obj, self._name )
+	
+
+# File I/O Stream Emulation
+snippet streams
+	#=============================================================================
+	class ${1:GetDescriptor}( object ):
+	    """
+	    Implements a descriptor to enforce read-only, state-style attributes.
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, name, doc = '' ):
+	        """
+	        Initializes a $1 object.
+	        """
+	        self._name   = name
+	        self.__doc__ = doc
+	
+	
+	    #=========================================================================
+	    def __get__( self, obj, objtype = None ):
+	        """
+	        Retrieves the state of this attribute.
+	        """
+	        if obj is None:
+	            return self
+	        return getattr( obj, self._name )
+	
+	
+	#=============================================================================
+	class ${2:BaseStream}( object ):
+	    """
+	    Implements attributes common to both input and output stream objects.
+	
+	    Dependencies
+	
+	        import os
+	        class $1
+	    """
+	
+	    #=========================================================================
+	    # public properties
+	
+	    # stream closed state
+	    _closed = True
+	    closed = $1( '_closed', 'Stream closed state (bool)' )
+	
+	    # string encoding used by this stream
+	    _encoding = None
+	    encoding = $1( '_encoding', 'Stream string encoding.' )
+	
+	    # the unicode error handler used along with the encoding
+	    errors = None
+	
+	    # current mode of the stream
+	    _mode = 'r'
+	    mode = $1( '_mode', 'File I/O mode.' )
+	
+	    # named representation of the stream (e.g. file name)
+	    _name = ''
+	    name = $1( '_name', 'Named representation of the stream.' )
+	
+	    # allow the built-in \`print\` implementation to keep state in stream
+	    softspace = 0
+	
+	
+	    #=========================================================================
+	    def __init__( self ):
+	        """
+	        Initializes a $2 object.
+	        """
+	        super( $2, self ).__init__()
+	
+	
+	    #=========================================================================
+	    def close( self ):
+	        """
+	        Closes the file-like stream.
+	        """
+	        self._closed = True
+	
+	
+	    #=========================================================================
+	    def flush( self ):
+	        """
+	        Flushes the internal buffer.
+	        """
+	        pass
+	
+	
+	    #=========================================================================
+	    # Do not implement if the object does not have a real file descriptor.
+	    #def fileno( self ):
+	    #    """
+	    #    Returns the integer file descriptor.
+	    #    """
+	    #    pass
+	
+	
+	    #=========================================================================
+	    # Do not implement if the object is not using a real file.
+	    #def isatty( self ):
+	    #    """
+	    #    Tests the stream to determine if it is a TTY (or similar) device.
+	    #    """
+	    #    pass
+	
+	
+	    #=========================================================================
+	    def seek( self, offset, whence = os.SEEK_SET ):
+	        """
+	        Moves the stream's internal position to a new offset.
+	
+	        @param offset The new offset
+	        @param whence The reference point of the new offset.  One of:
+	                      os.SEEK_SET (0): relative the start of the stream
+	                      os.SEEK_CUR (1): relative the current position
+	                      os.SEEK_END (2): relative the end of the stream
+	        """
+	        pass
+	
+	
+	    #=========================================================================
+	    def tell( self ):
+	        """
+	        Returns the current position in the stream.
+	        """
+	        return 0
+	
+	
+	#=============================================================================
+	class ${3:InputStream}( $2 ):
+	    """
+	    Emulates a file-like stream for reading data.
+	
+	    Dependencies
+	
+	        import os
+	        class $1
+	        class $2
+	    """
+	
+	    #=========================================================================
+	    # public properties
+	
+	    # newline style or list of styles encountered in stream
+	    _newlines = None
+	    newlines = $1( '_newlines', 'Newlines in stream.' )
+	
+	
+	    #=========================================================================
+	    def __init__( self ):
+	        """
+	        Initializes an $3 object.
+	        """
+	        super( $3, self ).__init__()
+	
+	
+	    #=========================================================================
+	    def next( self ):
+	        """
+	        Returns the next element from the stream.
+	        """
+	        if True:
+	            raise StopIteration()
+	
+	
+	    #=========================================================================
+	    def read( self, size = 0 ):
+	        """
+	        Reads data from the stream.
+	
+	        @param size Limit the maximum number of bytes to return
+	        @return     Stream data as a string
+	        """
+	        has_reached_eof = True
+	        if has_reached_eof == True:
+	            return ''
+	        if size > 0:
+	            return 'a specified number of bytes from the stream'[ : size ]
+	        return 'remaining data in stream'
+	
+	
+	    #=========================================================================
+	    def readline( self, size = 0 ):
+	        """
+	        Reads the next line from the stream.
+	        If the line is complete, the trailing line terminator is included.
+	
+	        @param size Limit the maximum number of bytes to return
+	        @return     The next line from the stream
+	        """
+	        return '\n'
+	
+	
+	    #=========================================================================
+	    def readlines( self, sizehint = 0 ):
+	        """
+	        Reads all remaining lines from the stream.
+	
+	        @param sizehint Limit the approximate bytes read from the stream
+	        return          A list of all remaining lines in the stream
+	        """
+	        return []
+	
+	
+	#=============================================================================
+	class ${4:OutputStream}( $2 ):
+	    """
+	    Emulates a file-like stream that can accept output.
+	
+	    Dependencies
+	
+	        class $2
+	    """
+	
+	    #=========================================================================
+	    def __init__( self ):
+	        """
+	        Initializes an $4 object.
+	        """
+	        super( $4, self ).__init__()
+	
+	
+	    #=========================================================================
+	    def truncate( self, size = 0 ):
+	        """
+	        Truncate the file's size.  If the size is not specified, the file is
+	        truncated to the current position.  If the size is specified, the file
+	        _should_ be that size after truncation (which may include making the
+	        file larger if it is smaller than the given size).
+	        """
+	        pass
+	
+	
+	    #=========================================================================
+	    def write( self, string ):
+	        """
+	        Writes data to the stream.
+	        """
+	        pass
+	
+	
+	    #=========================================================================
+	    def writelines( self, sequence ):
+	        """
+	        Writes a sequence of strings to the file.  Line separators are not
+	        added by this method; each item in the sequence should terminate
+	        themselves.
+	        """
+	        pass
+	
+
+# Mapping Type Emulation
+snippet map
+	#=============================================================================
+	class ${1:ImMap}( object ):
+	    """
+	    Emulates an immutable mapping as an object.
+	    This is used in place of attempting to subclass the \`dict\` container, and
+	    has the added benefit of being a read-only (by convention) structure.
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, *args, **kwargs ):
+	        """
+	        Initializes an $1 object.
+	        """
+	        self.${3:_data} = dict( *args, **kwargs )
+	
+	
+	    #=========================================================================
+	    def __contains__( self, key ):
+	        """
+	        Checks for the presense of a key in the map using the \`in\` construct.
+	        """
+	        return key in self.$3
+	
+	
+	    #=========================================================================
+	    def __getitem__( self, key ):
+	        """
+	        Provides key access to data in the map.
+	        """
+	        return self.$3[ key ]
+	
+	
+	    #=========================================================================
+	    def __iter__( self ):
+	        """
+	        Produces an iterator for the data in the map.
+	        """
+	        return iter( self.$3 )
+	
+	
+	    #=========================================================================
+	    def __len__( self ):
+	        """
+	        Returns the number of items in the map.
+	        """
+	        return len( self.$3 )
+	
+	
+	    #=========================================================================
+	    def __str__( self ):
+	        """
+	        Represents this map as a string.
+	        """
+	        keys    = self.$3.keys()
+	        max_key = max( len( key ) for key in keys )
+	        fmt     = '"{1}"{0} : {2}'
+	        pairs   = []
+	        for key in keys:
+	            value = self.$3[ key ]
+	            if type( value ) is str:
+	                value = '"' + value + '"'
+	            pad = max_key - len( key )
+	            pairs.append( fmt.format( ( ' ' * pad ), key, value ) )
+	        return '{\n    ' + ( ',\n    '.join( pairs ) ) + '\n}'
+	
+	
+	    #=========================================================================
+	    def copy( self ):
+	        """
+	        Returns a shallow copy of the data in the map.
+	        """
+	        return self.$3.copy()
+	
+	
+	    #=========================================================================
+	    def get( self, key, default = None ):
+	        """
+	        Returns the value of a given key if it is in the map.
+	        If it is not in the map, return the default value.
+	        """
+	        return self.$3.get( key, default )
+	
+	
+	    #=========================================================================
+	    def has_key( self, key ):
+	        """
+	        Tests for the presense of a key in the map.
+	        """
+	        return self.$3.has_key( key )
+	
+	
+	    #=========================================================================
+	    def items( self ):
+	        """
+	        Returns a list of the map's key-value pairs.
+	        """
+	        return self.$3.items()
+	
+	
+	    #=========================================================================
+	    def iteritems( self ):
+	        """
+	        Returns an iterator over the list of the map's key-value pairs.
+	        """
+	        return self.$3.iteritems()
+	
+	
+	    #=========================================================================
+	    def iterkeys( self ):
+	        """
+	        Returns an iterator over the map's keys.
+	        """
+	        return self.$3.iterkeys()
+	
+	
+	    #=========================================================================
+	    def itervalues( self ):
+	        """
+	        Returns an iterator over the map's values.
+	        """
+	        return self.$3.itervalues()
+	
+	
+	    #=========================================================================
+	    def keys( self ):
+	        """
+	        Returns a list of the map's keys.
+	        """
+	        return self.$3.keys()
+	
+	
+	    #=========================================================================
+	    def values( self ):
+	        """
+	        Returns a list of the map's values.
+	        """
+	        return self.$3.values()
+	
+	
+	#=============================================================================
+	class ${2:MMap}( $1 ):
+	    """
+	    Emulates a mutable mapping as an object.
+	    This is used in place of attempting to subclass the \`dict\` container.
+	    Note: This container relies on having $1 container in
+	    the same module.  If that is not desired, simply copy its methods into
+	    this class, and subclass \`object\` instead of $1.
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, *args, **kwargs ):
+	        """
+	        Initializes a $2 object.
+	        """
+	        super( $2, self ).__init__( *args, **kwargs )
+	
+	
+	    #=========================================================================
+	    def __delitem__( self, key ):
+	        """
+	        Removes an item from the map with the given key.
+	        """
+	        del self.$3[ key ]
+	
+	
+	    #=========================================================================
+	    def __setitem__( self, key, value ):
+	        """
+	        Modifies a value in the map with the given key.
+	        """
+	        self.$3[ key ] = value
+	
+	
+	    #=========================================================================
+	    def clear( self ):
+	        """
+	        Removes all items from the map.
+	        """
+	        self.$3.clear()
+	
+	
+	    #=========================================================================
+	    def pop( self, key, *args ):
+	        """
+	        Removes and returns an item from the map with the given key.
+	        If the key doesn't exist, and default is given, return default.
+	        """
+	        if len( args ) > 0:
+	            return self.$3.pop( key, args[ 0 ] )
+	        return self.$3.pop( key )
+	
+	
+	    #=========================================================================
+	    def popitem( self ):
+	        """
+	        Removes and returns an arbitrary key-value pair from the map.
+	        """
+	        return self.$3.popitem()
+	
+	
+	    #=========================================================================
+	    def setdefault( self, key, default = None ):
+	        """
+	        Returns the value of key from the map.
+	        If the key doesn't exist, insert a new item into the map with the
+	        value specified.
+	        """
+	        return self.$3.setdefault( key, default )
+	
+	    #=========================================================================
+	    def update( self, other ):
+	        """
+	        Updates the map with the given key-value pairs, dict, or map.
+	        Returns None.
+	        """
+	        return self.$3.update( other )
+	
+
+# Sequence Type Emulation
+snippet sequence
+	#=============================================================================
+	class ${1:ImSequence}( object ):
+	    """
+	    Emulates an immutable sequence as an object.
+	    This is used in place of attempting to subclass the \`tuple\` container.
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, *args, **kwargs ):
+	        """
+	        Initializes an $1 object.
+	        """
+	        self.${3:_data} = list( *args, **kwargs )
+	
+	
+	    #=========================================================================
+	    def __add__( self, other ):
+	        """
+	        Implements sequence concatenation via the \`+\` operator.
+	        """
+	        if type( other ) != list:
+	            other = list( other )
+	        return self.$3 + other
+	
+	
+	    #=========================================================================
+	    def __cmp__( self, other ):
+	        """
+	        Implements sequence comparison via the \`==\`, \`!=\`, \`<=\`, and \`>=\`
+	        operators.
+	        """
+	        num_mine   = len( self.$3 )
+	        num_theirs = len( other )
+	        num_diff   = num_mine - num_theirs
+	        if num_diff != 0:
+	            return num_diff
+	        for index in range( num_mine ):
+	            diff = self.$3[ index ] - other[ index ]
+	            if diff != 0:
+	                return diff
+	        return 0
+	
+	
+	    #=========================================================================
+	    def __contains__( self, value ):
+	        """
+	        Provides support for searching the sequence using the \`in\` construct.
+	        """
+	        return value in self.$3
+	
+	
+	    #=========================================================================
+	    def __getitem__( self, index ):
+	        """
+	        Dereference an item in the sequence by index.
+	        """
+	        if isinstance( index, int ):
+	            return self.$3[ index ]
+	        elif isinstance( index, slice ):
+	            start, stop, step = index.indices( len( self.$3 ) )
+	            return self.$3[ start : stop : step ]
+	        else:
+	            raise TypeError( 'Sequence indexes must be integers or slices.' )
+	
+	
+	    #=========================================================================
+	    def __iter__( self ):
+	        """
+	        Provides an iterator for the sequence.
+	        """
+	        return iter( self.$3 )
+	
+	
+	    #=========================================================================
+	    def __len__( self ):
+	        """
+	        Get the length of the sequence.
+	        """
+	        return len( self.$3 )
+	
+	
+	    #=========================================================================
+	    def __mul__( self, other ):
+	        """
+	        Implements sequence repitition via the \`*\` operator.
+	        """
+	        return self.$3 * other
+	
+	
+	    #=========================================================================
+	    def __radd__( self, other ):
+	        """
+	        Implements reflected sequence concatenation via the \`+\` operator.
+	        """
+	        if type( other ) != list:
+	            other = list( other )
+	        return other + self.$3
+	
+	
+	    #=========================================================================
+	    def __rmul__( self, other ):
+	        """
+	        Implements reflected sequence repitition via the \`*\` operator.
+	        """
+	        return other * self.$3
+	
+	
+	    #=========================================================================
+	    def __str__( self ):
+	        """
+	        Returns a string representation of the sequence.
+	        """
+	        return '( {} )'.format( ', '.join( str( v ) for v in self.$3 ) )
+	
+	
+	    #=========================================================================
+	    def count( self, value ):
+	        """
+	        Counts the number of occurrences of a value in the sequence.
+	        """
+	        return self.$3.count( value )
+	
+	
+	    #=========================================================================
+	    def index( self, value ):
+	        """
+	        Returns the first occurrence of a value in the sequence.
+	        """
+	        return self.$3.index( value )
+	
+	
+	#=============================================================================
+	class ${2:MSequence}( $1 ):
+	    """
+	    Emulates a mutable sequence as an object.
+	    This is used in place of attempting to subclass the \`list\` container.
+	    Note: This container relies on having $1 container
+	    in the same module.  If that is not desired, simply copy its methods into
+	    this class, and subclass \`object\` instead of $1.
+	    """
+	
+	    #=========================================================================
+	    def __init__( self, *args, **kwargs ):
+	        """
+	        Initializes a $2 object.
+	        """
+	        super( $2, self ).__init__( *args, **kwargs )
+	
+	
+	    #=========================================================================
+	    def __delitem__( self, index ):
+	        """
+	        Deletes an item or items from the sequence at a given index or slice.
+	        """
+	        if isinstance( index, int ):
+	            del self.$3[ index ]
+	        elif isinstance( index, slice ):
+	            start, stop, step = index.indices( len( self.$3 ) )
+	            del self.$3[ start : stop : step ]
+	        else:
+	            raise TypeError( 'Sequence indexes must be integers or slices.' )
+	
+	
+	    #=========================================================================
+	    def __iadd__( self, other ):
+	        """
+	        Implements augmented addition to extend the sequence.
+	        """
+	        if type( other ) != list:
+	            other = list( other )
+	        self.$3 += other
+	        return self
+	
+	
+	    #=========================================================================
+	    def __imul__( self, other ):
+	        """
+	        Implements augmented multiplication to repeat the sequence in place.
+	        """
+	        self.$3 *= other
+	        return self
+	
+	
+	    #=========================================================================
+	    def __setitem__( self, index, value ):
+	        """
+	        Modifies an item or items in the sequence at a given index or slice.
+	        """
+	        if isinstance( index, int ):
+	            self.$3[ index ] = value
+	        elif isinstance( index, slice ):
+	            start, stop, step = index.indices( len( self.$3 ) )
+	            self.$3[ start : stop : step ] = value
+	        else:
+	            raise TypeError( 'Sequence indexes must be integers or slices.' )
+	
+	
+	    #=========================================================================
+	    def __str__( self ):
+	        """
+	        Returns a string representation of the sequence.
+	        """
+	        return '[ {} ]'.format( ', '.join( str( v ) for v in self.$3 ) )
+	
+	
+	    #=========================================================================
+	    def append( self, value ):
+	        """
+	        Appends a value to the end of the sequence.
+	        """
+	        self.$3.append( value )
+	
+	
+	    #=========================================================================
+	    def extend( self, sequence ):
+	        """
+	        Extends the sequence by appending the given sequence.
+	        """
+	        self.$3.extend( sequence )
+	
+	
+	    #=========================================================================
+	    def insert( self, index, value ):
+	        """
+	        Inserts a value at the given index.
+	        """
+	        self.$3.insert( index, value )
+	
+	
+	    #=========================================================================
+	    def pop( self, index = None ):
+	        """
+	        Removes a value at the given index, and returns it.
+	        """
+	        if index is None:
+	            index = len( self.$3 ) - 1
+	        return self.$3.pop( index )
+	
+	
+	    #=========================================================================
+	    def remove( self, value ):
+	        """
+	        Removes the first given value and returns it.
+	        """
+	        self.$3.remove( value )
+	
+	
+	    #=========================================================================
+	    def reverse( self ):
+	        """
+	        Reverses the values in the sequence, in place.
+	        """
+	        self.$3.reverse()
+	
+	
+	    #=========================================================================
+	    def sort( self, cmp = None, key = None, reverse = False ):
+	        """
+	        Sorts the values, in place.
+	        """
+	        self.$3.sort( cmp, key, reverse )
+	
+
+#=============================================================================
+# Formatting and Style Templates
+#=============================================================================
+
+#=============================================================================
+# Literals and Common Implementations
+#=============================================================================
+
+#=============================================================================
+# Miscellaneous Automation
+#=============================================================================
+
+#=============================================================================
+# Source Code Templates
+#=============================================================================
 
 # Generic Shell Script
 snippet shell
@@ -141,7 +974,7 @@ snippet shell
 	
 	
 	"""
-	${1:description}
+	${1:A Shell Script}
 	"""
 	
 	
@@ -152,8 +985,8 @@ snippet shell
 	def main( argv ):
 	    """
 	    Script execution entry point
-	    @param argv         Arguments passed to the script
-	    @return             Exit code (0 = success)
+	    @param argv List of arguments passed to the script
+	    @return     Shell exit code (0 = success)
 	    """
 	
 	    # imports when using this as a script
@@ -184,7 +1017,7 @@ snippet shell
 	    args = parser.parse_args( argv[ 1 : ] )
 	
 	    # check args.* for script execution here
-	    ${2}
+	    $2print 'Template code executed.  Replace with real code.'
 	
 	    # return success
 	    return os.EX_OK
@@ -197,92 +1030,131 @@ snippet shell
 	    sys.exit( main( sys.argv ) )
 	
 
-# Reminders
-snippet magic
-	# http://www.rafekettler.com/magicmethods.html
-	# construction/destruction
-	__new__( cls, ... )
-	__init__( self, ... )
-	__del__( self )
-	# sequence-style access control
-	__len__( self )
-	__getitem__( self )
-	__setitem__( self )
-	__delitem__( self )
-	__iter__( self )
-	__reversed__( self )
-	__contains__( self )
-	__missing__( self )
-	# attribute-style access control
-	__getattr__( self, name )
-	__setattr__( self, name, value )
-	__delattr__( self, name )
-	__getattribute__( self, name )
-	# descriptors
-	__get__( self, instance, owner )
-	__set__( self, instance, value )
-	__delete__( self, instance )
-	# representations
-	__str__( self )
-	__repr__( self )
-	__unicode__( self )
-	__format__( self, formatstr )
-	__hash__( self )
-	__nonzero__( self )
-	__dir__( self )
-	__sizeof__( self )
-	# contexts
-	__enter__( self )
-	__exit__( self, exception_type, exception_value, traceback )
-	# comparison
-	__cmp__( self, other )
-	__eq__( self, other )
-	__ne__( self, other )
-	__lt__( self, other )
-	__gt__( self, other )
-	__le__( self, other )
-	__ge__( self, other )
-	# type conversion
-	__int__( self )
-	__long__( self )
-	__float__( self )
-	__complex__( self )
-	__oct__( self )
-	__hex__( self )
-	__index__( self )
-	__trunc__( self )
-	__coerce__( self, other )
-	# copying
-	__copy__( self )
-	__deepcopy__( self, memodict = {} )
-	# numeric, unary operations
-	__pos__( self )
-	__neg__( self )
-	__abs__( self )
-	__invert__( self )
-	__round__( self, n )
-	__floor__( self )
-	__ceil__( self )
-	__trunc__( self )
-	# numeric, arithmetic operations
-	__add__( self, other)
-	__sub__( self, other)
-	__mul__( self, other)
-	__floordiv__( self, other)
-	__div__( self, other)
-	__truediv__( self, other)
-	__mod__( self, other)
-	__divmod__( self, other)
-	__pow__( self )
-	__lshift__( self, other)
-	__rshift__( self, other)
-	__and__( self, other)
-	__or__( self, other)
-	__xor__( self, other)
-	# numeric, reflected arithmetic operations (TBD)
-	# augmented assignment (TBD)
-	# reflection (TBD)
-	# callable objects (TBD)
-	# pickling (TBD)
-
-
+# New Module with Built-in Unit Tests
+snippet module
+	#!/usr/bin/env python
+	
+	
+	"""
+	${1:A Module}
+	"""
+	
+	
+	__version__ = '0.0.0'
+	
+	
+	#=============================================================================
+	def _test():
+	    """
+	    Executes all module test functions.
+	
+	    @return True if all tests pass, false if one fails.
+	    """
+	
+	    # imports for testing only
+	    import inspect
+	
+	    # set up a simple logging facility to capture or print test output
+	    class TestError( RuntimeError ):
+	        pass
+	    class TestLogger( object ):
+	        def fail( self, message ):
+	            caller = inspect.getframeinfo( inspect.stack()[ 1 ][ 0 ] )
+	            output = '## FAILED {}: {} ##'.format( caller.lineno, message )
+	            self.put( output )
+	            raise TestError( output )
+	        def put( self, message ):
+	            sys.stdout.write( '{}\n'.format( message ) )
+	    log = TestLogger()
+	
+	    # list of all module members
+	    members = globals().copy()
+	    members.update( locals() )
+	
+	    # iterate through module members
+	    for member in members:
+	
+	        # check members for test functions
+	        if ( member[ : 6 ] == '_test_' ) and ( callable( members[ member ] ) ):
+	
+	            # execute the test
+	            try:
+	                members[ member ]( log )
+	
+	            # catch any errors in the test
+	            except TestError:
+	
+	                # return failure to the user
+	                return False
+	
+	    # if no test fails, send a helpful message
+	    log.put( '!! PASSED !!' )
+	
+	    # return success to the user
+	    return True
+	
+	
+	#=============================================================================
+	def main( argv ):
+	    """
+	    Script execution entry point
+	    @param argv List of arguments passed to the script
+	    @return     Shell exit code (0 = success)
+	    """
+	
+	    # imports when using this as a script
+	    import argparse
+	
+	    # create and configure an argument parser
+	    parser = argparse.ArgumentParser(
+	        description = '$1',
+	        add_help    = False
+	    )
+	    parser.add_argument(
+	        '-h',
+	        '--help',
+	        default = False,
+	        help    = 'Display this help message and exit.',
+	        action  = 'help'
+	    )
+	    parser.add_argument(
+	        '-v',
+	        '--version',
+	        default = False,
+	        help    = 'Display script version and exit.',
+	        action  = 'version',
+	        version = __version__
+	    )
+	    parser.add_argument(
+	        '-t',
+	        '--test',
+	        default = False,
+	        help    = 'Execute built-in unit tests.',
+	        action  = 'store_true'
+	    )
+	
+	    # parse the arguments
+	    args = parser.parse_args( argv[ 1 : ] )
+	
+	    # user requests built-in unit tests
+	    if args.test != False:
+	        result = _test()
+	        if result == False:
+	            return os.EX_SOFTWARE
+	        return os.EX_OK
+	
+	    # check args.* for script execution here
+	    else:
+	        print 'Module executed as script.'
+	        return os.EX_USAGE
+	
+	    # return success
+	    return os.EX_OK
+	
+	
+	#=============================================================================
+	if __name__ == "__main__":
+	    import os
+	    import sys
+	    sys.exit( main( sys.argv ) )
+	
