@@ -1,4 +1,12 @@
-# PHP Code Snippets
+##############################################################################
+#
+# PHP Snippets
+#
+##############################################################################
+
+#=============================================================================
+# Structural Comments
+#=============================================================================
 
 # Comment Blocks
 snippet c0
@@ -36,10 +44,14 @@ snippet b0
 snippet b1
 	    /*======================================================================*/
 
+#=============================================================================
+# Function and Class Templates
+#=============================================================================
+
 # Function Skeletons
 snippet fun
 	/**
-	 *  ${2:description}
+	 * ${2:description}
 	 *
 	 */
 	function ${1:name}() {
@@ -49,31 +61,65 @@ snippet fun
 	
 snippet vfun
 	/**
-	 *  ${2:description}
+	 * ${2:description}
 	 *
-	 *  @param param1 Description
-	 *  @param param2 Description
-	 *  @return       Description
-	 *  @throws       Exception
+	 * @param param1 Description
+	 * @param param2 Description
+	 * @return       Description
+	 * @throws       Exception
 	 */
 	function ${1:name}(
-	    $param1
+	    $param1,
 	    $param2
 	) {
 	
 	    ${3}
+	
+	    return false;
 	}
 	
 
 # Classes/Interfaces
 snippet class
 	/**
-	 *  ${2:description}
+	 * ${2:description}
+	 */
+	class ${1:name} {
+	
+	    /**
+	     * Constructor.
+	     */
+	    public function __construct() {
+	    }
+	
+	    ${3}
+	
+	}
+	
+snippet vclass
+	/**
+	 * ${2:description}
 	 */
 	class ${1:name} ${3:extends BaseClass} {
 	
+	    /*------------------------------------------------------------------------
+	    Public Properties
+	    ------------------------------------------------------------------------*/
+	
+	    /*------------------------------------------------------------------------
+	    Protected Properties
+	    ------------------------------------------------------------------------*/
+	
+	    /*------------------------------------------------------------------------
+	    Private Properties
+	    ------------------------------------------------------------------------*/
+	
+	    /*------------------------------------------------------------------------
+	    Public Methods
+	    ------------------------------------------------------------------------*/
+	
 	    /**
-	     *  Constructor.
+	     * Constructor.
 	     */
 	    public function __construct(
 	        $param
@@ -81,12 +127,31 @@ snippet class
 	        parent::__construct( $param );
 	    }
 	
+	
+	    /**
+	     * Represents the object state as a string.
+	     *
+	     * @return A string representing the object
+	     */
+	    public function __toString() {
+	        return '';
+	    }
+	
 	    ${4}
 	
+	    /*------------------------------------------------------------------------
+	    Protected Methods
+	    ------------------------------------------------------------------------*/
+	
+	    /*------------------------------------------------------------------------
+	    Private Methods
+	    ------------------------------------------------------------------------*/
+	
 	}
-snippet iface
+	
+snippet interface
 	/**
-	 *  ${2:description}
+	 * ${2:description}
 	 */
 	interface ${1:name} ${3:extends BaseInterface} {
 	
@@ -94,18 +159,18 @@ snippet iface
 	
 	}
 	
-snippet exc
+snippet exception
 	/**
-	 *  ${2:description}
+	 * ${2:description}
 	 */
 	class ${1:name} extends Exception {
 	
 	    /**
-	     *  Exception constructor.
+	     * Exception constructor.
 	     *
-	     *  @param message  Exception message
-	     *  @param code     Numerical exception code (optional)
-	     *  @param previous Previous exception (optional)
+	     * @param message  Exception message
+	     * @param code     Numerical exception code (optional)
+	     * @param previous Previous exception (optional)
 	     */
 	    public function __construct(
 	        $message,
@@ -118,7 +183,7 @@ snippet exc
 	
 snippet meth
 	    /**
-	     *  ${2:description}
+	     * ${2:description}
 	     *
 	     */
 	    public function ${1:name}() {
@@ -127,6 +192,25 @@ snippet meth
 	    }
 	
 
+#-----------------------------------------------------------------------------
+# PHP Interface Templates
+#-----------------------------------------------------------------------------
+
+#=============================================================================
+# Formatting and Style Templates
+#=============================================================================
+
+#=============================================================================
+# Literals and Common Implementations
+#=============================================================================
+
+#=============================================================================
+# Miscellaneous Automation
+#=============================================================================
+
+#=============================================================================
+# Source Code Templates
+#=============================================================================
 
 # Source
 snippet source
@@ -166,7 +250,6 @@ snippet source
 	    ${5}
 	}
 	
-
 
 # Supporting HTML
 snippet html
@@ -218,4 +301,5 @@ snippet css
 	    a:visited { color: #000066; }
 	    a:hover { color: #0066FF; }
 	    hr, blockquote { border-color: #CCCCCC; }
+	
 
