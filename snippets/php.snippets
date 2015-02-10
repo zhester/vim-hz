@@ -37,12 +37,36 @@ snippet c6
 	                        /*----------------------------------------------------
 	                        ${1}
 	                        ----------------------------------------------------*/
+# End
+
+# Function-style Comment Block
+snippet fc
+	/**
+	 * ${1:description}
+	 *
+	 * @param ${2:param}
+	 * @return ${3:return}
+	 * @throws ${4:throws}
+	 */
+# End
+
+# Function-style Comment Block for Methods
+snippet mc
+	    /**
+	     * ${1:description}
+	     *
+	     * @param ${2:param}
+	     * @return ${3:return}
+	     * @throws ${4:throws}
+	     */
+# End
 
 # Separator Bars
 snippet b0
 	/*==========================================================================*/
 snippet b1
 	    /*======================================================================*/
+# End
 
 #=============================================================================
 # Function and Class Templates
@@ -78,6 +102,7 @@ snippet vfun
 	    return false;
 	}
 	
+# End
 
 # Classes/Interfaces
 snippet class
@@ -191,6 +216,7 @@ snippet meth
 	        ${3}
 	    }
 	
+# End
 
 #-----------------------------------------------------------------------------
 # PHP Interface Templates
@@ -250,6 +276,7 @@ snippet source
 	    ${5}
 	}
 	
+# End
 
 # Supporting HTML
 snippet html
@@ -265,6 +292,7 @@ snippet html
 	  ${2}
 	</body>
 	</html>
+# End
 
 # Supporting CSS
 snippet css
@@ -302,4 +330,5 @@ snippet css
 	    a:hover { color: #0066FF; }
 	    hr, blockquote { border-color: #CCCCCC; }
 	
+# End
 
