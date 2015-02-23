@@ -1,10 +1,21 @@
-# JavaScript Code Snippets
+##############################################################################
+#
+# JavaScript Snippets
+#
+##############################################################################
+
+#=============================================================================
+# Structural Comments
+#=============================================================================
 
 # Separator Bars
 snippet b0
 	/*--------------------------------------------------------------------------*/
 snippet b1
-	  /*------------------------------------------------------------------------*/
+	    /*----------------------------------------------------------------------*/
+snippet b3
+	        /*------------------------------------------------------------------*/
+# end of snippet
 
 # Blocky Comments
 snippet c0
@@ -12,116 +23,247 @@ snippet c0
 	${1}
 	----------------------------------------------------------------------------*/
 snippet c1
-	  /*--------------------------------------------------------------------------
-	  ${1}
-	  --------------------------------------------------------------------------*/
-snippet c2
 	    /*------------------------------------------------------------------------
 	    ${1}
 	    ------------------------------------------------------------------------*/
+snippet c2
+	      /*----------------------------------------------------------------------
+	      ${1}
+	      ----------------------------------------------------------------------*/
+# end of snippet
+
+# Section Comments
+snippet s0
+	/*============================================================================
+	${1}
+	============================================================================*/
+snippet s1
+	    /*========================================================================
+	    ${1}
+	    ========================================================================*/
+snippet s2
+	        /*====================================================================
+	        ${1}
+	        ====================================================================*/
+# end of snippet
+
+#=============================================================================
+# Function and Class Templates
+#=============================================================================
 
 # Functions
 snippet fun
 	/**
-	 *  ${2:description}
+	 * ${2:description}
 	 *
 	 */
 	function ${1:name}() {
 	
-	  ${3}
+	    ${3}
 	}
 snippet vfun
 	/**
-	 *  ${2:description}
+	 * ${2:description}
 	 *
-	 *  @param param Description
-	 *  @return
-	 *  @throws
+	 * @param param Description
+	 * @return
+	 * @throws
 	 */
 	function ${1:name}( param ) {
 	
-	  ${3}
+	    ${3}
 	
-	  return false;
+	    return false;
 	}
+# end of snippet
+
+# Class things
+snippet class
+	/**
+	 * ${2:description}
+	 *
+	 * @param
+	 * @throws
+	 */
+	function ${1:Class}() {
+	
+	    ${3}
+	
+	}
+snippet subclass
+	/**
+	 * ${3:description}
+	 *
+	 * @param
+	 * @throws
+	 */
+	function ${1:Class}() {
+	
+	    ${2:Super}.apply( this, arguments );
+	
+	    ${4}
+	
+	}
+	for( var name in $2.prototype ) {
+	    $1.prototype[ name ] = $2.prototype[ name ];
+	}
+snippet meth
+	/**
+	 * ${3:description}
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 */
+	${1:Class}.prototype.${2:method} = function() {
+	
+	    ${4}
+	
+	    return false;
+	};
+# end of snippet
 
 # Other Structured Things
-snippet class
+snippet namespace
 	/*----------------------------------------------------------------------------
 	${2:description}
 	----------------------------------------------------------------------------*/
 	${1:name} = ( function( ns ) {
 	
-	  ${3}
+	    ${3}
 	
-	  return ns;
+	    return ns;
 	} )( $1 || {} );
 snippet event
 	${1:object}.addEventListener(
-	  '${2:event}',
-	  function( event ) {
-	    ${3}
-	  },
-	  false
+	    '${2:event}',
+	    function( event ) {
+	        ${3}
+	    },
+	    false
 	);
 snippet arg
 	var ${1:name} = arguments.length > ${2:0} ? arguments[ $2 ];
+snippet closure
+	( function( ${4:inst} ) { return function( ${1:event} ) {
+	    ${2}
+	}; } )( ${3:this} );
+# end of snippet
+
+# DTL starter/reminder
+snippet dtl
+	var ${1:node} = hz.doc.build( [ 'div', { 'id' : '${2:myid}' }, [
+	    [ 'h1', 'Title Text' ],
+	    [ 'div', 'start ', [ 'span', 'middle' ], ' end' ],
+	    [ 'input', { 'type' : 'text' } ]
+	] ] );
+# end of snippet
+
+#=============================================================================
+# Formatting and Style Templates
+#=============================================================================
+
+#=============================================================================
+# Literals and Common Implementations
+#=============================================================================
 
 # main()-like setup
 snippet main
 	/**
-	 *  Runs the script from the beginning.
+	 * Runs the script from the beginning.
 	 *
-	 *  @param argv Script parameters
-	 *  @return     True on success, false on abnormal termination
+	 * @param argv Script parameters
+	 * @return     True on success, false on abnormal termination
 	 */
 	function main( argv ) {
 	
-	  //Begin script execution.
-	  ${1}
+	    //Begin script execution.
+	    ${1}
 	
-	  //Return normal termination status.
-	  return true;
+	    //Return normal termination status.
+	    return true;
 	}
 	
 	//Run the script's entry point once the page has loaded.
 	window.addEventListener(
-	  'load',
-	  function( event ) {
-	    if( 'main' in window ) {
-	      var hash = window.location.hash.replace( /^#/, '' );
-	      var argv = hash.split( /(?:[+\s]|%20)*(?<!\),(?:[+\s]|%20)*/ );
-	      window.main.apply( window, argv );
-	    }
-	  },
-	  false
+	    'load',
+	    function( event ) {
+	        if( 'main' in window ) {
+	            var hash = window.location.hash.replace( /^#/, '' );
+	            var argv = hash.split( /(?:[+\s]|%20)*(?<!\),(?:[+\s]|%20)*/ );
+	            window.main.apply( window, argv );
+	        }
+	    },
+	    false
 	);
+# end of snippet
 
 # Quick-and-dirty HTTP GET Expecting JSON
 snippet http
 	var HTTP = function( callback ) {
-	  this.xhr = new XMLHttpRequest();
-	  this.xhr.timeout   = 60 * 1000;
-	  this.xhr.onabort   = function( e ) { throw new Error( 'XHR aborted.' ); };
-	  this.xhr.onerror   = function( e ) { throw new Error( 'XHR error.' ); };
-	  this.xhr.ontimeout = function( e ) { throw new Error( 'XHR timed out.' ); };
-	  this.xhr.onload    = function( callback ) {
-	    return function( e ) {
-	      var rctype = this.getResponseHeader( 'content-type' );
-	      var ectype = 'application/json';
-	      if( rctype.substr( 0, ectype.length ) != ectype ) {
-	        throw new Error( "Invalid content type: " + rctype );
-	      }
-	      callback( JSON.parse( this.responseText ) );
-	    }
-	  }( callback );
-	  this.get = function( url ) {
-	    this.xhr.open( 'GET', url, true );
-	    this.xhr.send( null );
-	  };
+	    this.xhr = new XMLHttpRequest();
+	    this.xhr.timeout   = 60 * 1000;
+	    this.xhr.onabort   = function( e ) { throw new Error( 'XHR aborted.' ); };
+	    this.xhr.onerror   = function( e ) { throw new Error( 'XHR error.' ); };
+	    this.xhr.ontimeout = function( e ) { throw new Error( 'XHR timed out.' ); };
+	    this.xhr.onload    = function( callback ) {
+	        return function( e ) {
+	            var rctype = this.getResponseHeader( 'content-type' );
+	            var ectype = 'application/json';
+	            if( rctype.substr( 0, ectype.length ) != ectype ) {
+	                throw new Error( "Invalid content type: " + rctype );
+	            }
+	            callback( JSON.parse( this.responseText ) );
+	        }
+	    }( callback );
+	    this.get = function( url ) {
+	        this.xhr.open( 'GET', url, true );
+	        this.xhr.send( null );
+	    };
 	};
 	//var h = new HTTP( function( j ) { console.log( JSON.stringify( j ) ); } );
 	//h.get( 'example.json' );
+# end of snippet
+
+#=============================================================================
+# Miscellaneous Automation
+#=============================================================================
+
+# For loop over an array
+snippet for
+	for( var ${2:i} = 0, ${3:n} = $1s.length, ${1:item} = null; $2 < $3; ++$2 ) {
+	    $1 = $1s[ $2 ];
+	}
+
+# For loop over a key-value object
+snippet each
+	for( var ${2:key} in ${1:object} ) {
+	    if( $1.hasOwnProperty( $2 ) == false ) { continue; }
+	    ${3}
+	}
+# end of snippet
+
+# Create a new descriptor
+snippet descr
+	Object.defineProperty(
+	    ${4:this},
+	    '${1:name}',
+	    {
+	        'enumerable' : true,
+	        'get'        : function() { return ${2:object}; },
+	        'set'        : function( ${3:value} ) { $2 = $3; }
+	    }
+	);
+# end of snippet
+
+# Log a non-trivial value
+snippet log
+	console.log( JSON.stringify( ${1:value} ) );
+# end of snippet
+
+#=============================================================================
+# Source Code Templates
+#=============================================================================
 
 # Library submodule source
 snippet library
@@ -169,6 +311,7 @@ snippet library
 	    return ns;
 	} )( $3.$2 || {} );
 	
+# end of snippet
 
 # Generic script source
 snippet source
@@ -186,6 +329,7 @@ snippet source
 	${2}
 	----------------------------------------------------------------------------*/
 	
+# end of snippet
 
 # Various API Time-savers
 snippet gi
@@ -198,4 +342,5 @@ snippet ct
 	document.createTextNode( '${1:text}' );
 snippet at
 	.appendChild( document.createTextNode( '${1:text}' ) );
+# end of snippet
 
