@@ -45,8 +45,8 @@ snippet fc
 	 * ${1:description}
 	 *
 	 * @param ${2:param}
-	 * @return ${3:return}
-	 * @throws ${4:throws}
+	 * @return
+	 * @throws
 	 */
 # End
 
@@ -56,8 +56,8 @@ snippet mc
 	     * ${1:description}
 	     *
 	     * @param ${2:param}
-	     * @return ${3:return}
-	     * @throws ${4:throws}
+	     * @return
+	     * @throws
 	     */
 # End
 
@@ -68,11 +68,12 @@ snippet b1
 	    /*======================================================================*/
 # End
 
+
 #=============================================================================
 # Function and Class Templates
 #=============================================================================
 
-# Function Skeletons
+# Basic Function Template
 snippet fun
 	/**
 	 * ${2:description}
@@ -83,19 +84,19 @@ snippet fun
 	    ${3}
 	}
 	
+# End
+
+# Verbose Function Template
 snippet vfun
 	/**
 	 * ${2:description}
 	 *
-	 * @param param1 Description
-	 * @param param2 Description
-	 * @return       Description
-	 * @throws       Exception
+	 * @param param1
+	 * @param param2
+	 * @return
+	 * @throws
 	 */
-	function ${1:name}(
-	    $param1,
-	    $param2
-	) {
+	function ${1:name}( $param1, $param2 ) {
 	
 	    ${3}
 	
@@ -104,7 +105,7 @@ snippet vfun
 	
 # End
 
-# Classes/Interfaces
+# Basic Class Template
 snippet class
 	/**
 	 * ${2:description}
@@ -112,20 +113,21 @@ snippet class
 	class ${1:name} {
 	
 	    /**
-	     * Constructor.
+	     * $1 Constructor
 	     */
 	    public function __construct() {
 	    }
 	
-	    ${3}
-	
 	}
 	
+# End
+
+# Verbose Class Template
 snippet vclass
 	/**
 	 * ${2:description}
 	 */
-	class ${1:name} ${3:extends BaseClass} {
+	class ${1:name} ${3:extends BaseClass} ${4:implements Interface} {
 	
 	    /*------------------------------------------------------------------------
 	    Public Properties
@@ -144,11 +146,11 @@ snippet vclass
 	    ------------------------------------------------------------------------*/
 	
 	    /**
-	     * Constructor.
+	     * $1 Constructor
+	     *
+	     * @param param
 	     */
-	    public function __construct(
-	        $param
-	    ) {
+	    public function __construct( $param ) {
 	        parent::__construct( $param );
 	    }
 	
@@ -162,7 +164,6 @@ snippet vclass
 	        return '';
 	    }
 	
-	    ${4}
 	
 	    /*------------------------------------------------------------------------
 	    Protected Methods
@@ -174,6 +175,9 @@ snippet vclass
 	
 	}
 	
+# End
+
+# Minimal Interface Template
 snippet interface
 	/**
 	 * ${2:description}
@@ -184,6 +188,9 @@ snippet interface
 	
 	}
 	
+# End
+
+# Custom Exception Template
 snippet exception
 	/**
 	 * ${2:description}
@@ -191,7 +198,7 @@ snippet exception
 	class ${1:name} extends Exception {
 	
 	    /**
-	     * Exception constructor.
+	     * $1 constructor.
 	     *
 	     * @param message  Exception message
 	     * @param code     Numerical exception code (optional)
@@ -206,15 +213,18 @@ snippet exception
 	    }
 	}
 	
+# End
+
+# Method Template
 snippet meth
-	    /**
-	     * ${2:description}
-	     *
-	     */
-	    public function ${1:name}() {
+	/**
+	 * ${2:description}
+	 *
+	 */
+	public function ${1:name}() {
 	
-	        ${3}
-	    }
+	    ${3}
+	}
 	
 # End
 
@@ -226,6 +236,27 @@ snippet meth
 # Formatting and Style Templates
 #=============================================================================
 
+# Columns Reminder
+snippet col
+	+---+-----------------------------------------------------------------------+
+	|1  |5                                                                      |77
+	/*****************************************************************************
+	File Header
+	*****************************************************************************/
+	/*============================================================================
+	Section Heading
+	============================================================================*/
+	/*----------------------------------------------------------------------------
+	Block Heading
+	----------------------------------------------------------------------------*/
+	    /*------------------------------------------------------------------------
+	    Block Comment
+	    ------------------------------------------------------------------------*/
+	|1  |5                                                                      |77
+	+---+-----------------------------------------------------------------------+
+# End
+
+
 #=============================================================================
 # Literals and Common Implementations
 #=============================================================================
@@ -234,11 +265,22 @@ snippet meth
 # Miscellaneous Automation
 #=============================================================================
 
+# Debugging/testing Output Setup
+snippet plain
+	////ZIH - temp
+	header( 'Content-Type: text/plain; charset=utf-8' );
+	echo "${1:message}\n";
+	echo json_encode( \$${2:data}, true );
+	exit();
+	////
+# End
+
+
 #=============================================================================
 # Source Code Templates
 #=============================================================================
 
-# Source
+# New Source File Template
 snippet source
 	<?php
 	/*****************************************************************************
@@ -272,7 +314,7 @@ snippet source
 	Execution
 	----------------------------------------------------------------------------*/
 	
-	if( $_SERVER[ 'SCRIPT_FILENAME' ] == __FILE__ ) {
+	if( realpath( $_SERVER[ 'SCRIPT_FILENAME' ] ) == __FILE__ ) {
 	
 	    header( 'Content-Type: text/plain; charset=utf-8' );
 	
@@ -318,6 +360,9 @@ snippet css
 	    }
 	    h1, h2, h3, h4, h5, h6 {
 	      font-family: 'Droid Sans', Tahoma, Geneva, sans-serif;
+	    }
+	    pre, code {
+	      font-family: 'Source Code Pro', Consolas, monospace;
 	    }
 	    h1 { font-size: 150%; }
 	    h2 { font-size: 140%; }
