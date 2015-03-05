@@ -1,10 +1,12 @@
+##############################################################################
+#
 # SQL Snippets
+#
+##############################################################################
 
-# Separator Bars
-snippet b0
-	/*==========================================================================*/
-snippet b1
-	    /*======================================================================*/
+#=============================================================================
+# Structural Comments
+#=============================================================================
 
 # Comment Blocks
 snippet c0
@@ -35,81 +37,29 @@ snippet c6
 	                        /*----------------------------------------------------
 	                        ${1}
 	                        ----------------------------------------------------*/
+# End
 
-# Select Skeleton
+# Separator Bars
+snippet b0
+	/*==========================================================================*/
+snippet b1
+	    /*======================================================================*/
+# End
 
-snippet select
-	select
-	    ${1:COLUMNS}
-	from
-	    ${2:TABLE} as t
-	    left join ${3:T2} as t2
-	where
-	    ${4:CLAUSE}
-	group by
-	    ${5:GROUP_COLUMS}
-	limit
-	    ${6:OFFSET}, ${7:LENGTH}
 
-# Table Skeleton
+#=============================================================================
+# Function and Class Templates
+#=============================================================================
 
-snippet table
-	/*----------------------------------------------------------------------------
-	${2:DESCRIPTION}
-	----------------------------------------------------------------------------*/
-	drop table if exists ${1:NAME};
-	create table $1 (
-	
-	    /*------------------------------------------------------------------------
-	    Referential Columns
-	    ------------------------------------------------------------------------*/
-	    id                  bigint unsigned not null auto_increment,
-	
-	    /*------------------------------------------------------------------------
-	    Data Columns
-	    ------------------------------------------------------------------------*/
-	    ${3}
-	
-	    /*------------------------------------------------------------------------
-	    Indexes
-	    ------------------------------------------------------------------------*/
-	    primary key( id )
-	
-	) engine = MyISAM;
-
-# Common Column/Key Definitions
-
-snippet time
-	    created             timestamp default current_timestamp,
-	    modified            timestamp default current_timestamp
-	                            on update current_timestamp,
-	    ${1}
-	    key( created ),
-	    key( modified )
-
-snippet string
-	    ${1:COLUMN}         varchar( ${2:255} ) not null default ''
-
-snippet ftk
-	    fulltext( ${1:COLUMN} )
-
-snippet fk
-	    foreign key( ${1:COLUMN} ) references ${2:FTABLE}( ${3:FCOLUMN} )
-
-# Stored Procedures
-
+# Basic Function (Stored Procedure) Definition
 snippet fun
 	/*----------------------------------------------------------------------------
-	
-	    ${1:NAME}
-	
-	    ${2:DESCRIPTION}
-	
+	${2:description}
 	----------------------------------------------------------------------------*/
 	
 	delimiter $$
 	
-	drop function if exists $1 $$
+	drop function if exists ${1:name} $$
 	
 	create function $1(
 	    bar                 int
@@ -127,22 +77,20 @@ snippet fun
 	
 	delimiter ;
 	
+# End
 
+# Verbose Function (Stored Procedure) Definition
 snippet vfun
 	/*----------------------------------------------------------------------------
+	${2:description}
 	
-	    ${1:NAME}
-	
-	    @param  bar An input to the function
-	    @return     Result of messing with foo
-	
-	    ${2:DESCRIPTION}
-	
+	@param bar An input to the function
+	@return    Result of messing with foo
 	----------------------------------------------------------------------------*/
 	
 	delimiter $$
 	
-	drop function if exists $1 $$
+	drop function if exists ${1:name} $$
 	
 	create function $1(
 	    bar                 int
@@ -179,16 +127,12 @@ snippet vfun
 	
 	delimiter ;
 	
+# End
 
-# Triggers
-
+# Trigger Before Insert
 snippet tbi
 	/*----------------------------------------------------------------------------
-	
-	    tbi_${1:TABLENAME}
-	
-	    ${2:DESCRIPTION}
-	
+	${2:description}
 	----------------------------------------------------------------------------*/
 	
 	delimiter $$
@@ -196,21 +140,19 @@ snippet tbi
 	drop trigger if exists tbi_$1$$
 	
 	create trigger tbi_$1
-	    before insert on $1 for each row
+	    before insert on ${1:table} for each row
 	    before
-	        set new.${3:COLUMN} = ${4:VALUE};
+	        set new.${3:column} = ${4:value};
 	    end $$
 	
 	delimiter ;
 	
+# End
 
+# Trigger Before Update
 snippet tbu
 	/*----------------------------------------------------------------------------
-	
-	    tbu_${1:TABLENAME}
-	
-	    ${2:DESCRIPTION}
-	
+	${2:description}
 	----------------------------------------------------------------------------*/
 	
 	delimiter $$
@@ -218,16 +160,100 @@ snippet tbu
 	drop trigger if exists tbu_$1$$
 	
 	create trigger tbu_$1
-	    before update on $1 for each row
+	    before update on ${1:table} for each row
 	    before
-	        set new.${3:COLUMN} = ${4:VALUE};
+	        set new.${3:column} = ${4:value};
 	    end $$
 	
 	delimiter ;
 	
+# End
 
-# Schemas
 
+#=============================================================================
+# Formatting and Style Templates
+#=============================================================================
+
+#=============================================================================
+# Literals and Common Implementations
+#=============================================================================
+
+# Select Skeleton
+snippet select
+	select
+	    ${1:columns}
+	from
+	    ${2:table}
+	    left join ${3:table2} on $3.$2_id = $2.id
+	where
+	    ${4:clauses}
+	group by
+	    ${5:columns}
+	order by
+	    ${6:columns}
+	limit
+	    ${7:offset}, ${8:length}
+# End
+
+# Table Skeleton
+snippet table
+	/*----------------------------------------------------------------------------
+	${2:description}
+	----------------------------------------------------------------------------*/
+	drop table if exists \`${1:name}\`;
+	create table \`$1\` (
+	
+	    /*------------------------------------------------------------------------
+	    Referential Columns
+	    ------------------------------------------------------------------------*/
+	    \`id\`                bigint unsigned not null auto_increment,
+	
+	    /*------------------------------------------------------------------------
+	    Data Columns
+	    ------------------------------------------------------------------------*/
+	    ${3}
+	
+	    /*------------------------------------------------------------------------
+	    Indexes
+	    ------------------------------------------------------------------------*/
+	    primary key( \`id\` )
+	
+	) engine = MyISAM default charset = utf8;
+	
+# End
+
+# Common Column/Key Definitions
+snippet time
+	\`created\`           timestamp default current_timestamp,
+	\`modified\`          timestamp default current_timestamp
+	                      on update current_timestamp,
+	${1}
+	key \`created\`  ( \`created\`  ),
+	key \`modified\` ( \`modified\` )
+snippet string
+	\`${1:column}\`       varchar( ${2:255} ) not null default ''${3}
+snippet ftk
+	fulltext \`$1\` ( \`${1:column}\`${2:, \`other\`} )${3}
+snippet fk
+	foreign key( \`${1:column}\` )
+	    references \`${2:ftable}\`( \`${3:fcolumn}\` )
+# End
+
+# Other Query Lines
+snippet join
+	left join ${3:source} on $3.$2_id = ${2:target}.id
+# End
+
+
+#=============================================================================
+# Miscellaneous Automation
+#=============================================================================
+
+#=============================================================================
+# Source Code Templates
+#=============================================================================
+
+# Schema File Header
 snippet schema
 	/*****************************************************************************
 	
@@ -235,4 +261,5 @@ snippet schema
 	
 	*****************************************************************************/
 	
+# End
 

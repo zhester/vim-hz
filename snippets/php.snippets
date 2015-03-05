@@ -261,6 +261,35 @@ snippet col
 # Literals and Common Implementations
 #=============================================================================
 
+# Database Query Strings
+snippet dbselect
+	$query = "
+	    select
+	        \`${1:column}\`
+	    from
+	        ${2:table}
+	        left join ${3:table2} on $3.$2_id = $2.id
+	    where
+	        \`$1\` = '${4:value}'
+	    order by
+	        \`$1\` asc
+	    limit
+	        ${5:1}
+	";
+snippet dbcreate
+	$query = "
+	    create table \`${1:name}\` (
+	        \`id\` unsigned int not null auto_increment,
+	        ${2}
+	        primary key( \`id\` )
+	    ) engine = MyISAM default charset = utf8
+	";
+snippet dbkey
+	key \`${1:column}\` ( \`$1\` )${2}
+snippet dbfulltext
+	fulltext key \`$1\`( \`${1:column}\`${2:, \`other\`} )${3}
+# End
+
 #=============================================================================
 # Miscellaneous Automation
 #=============================================================================
@@ -270,7 +299,7 @@ snippet plain
 	////ZIH - temp
 	header( 'Content-Type: text/plain; charset=utf-8' );
 	echo "${1:message}\n";
-	echo json_encode( \$${2:data}, true );
+	echo json_encode( \$${2:data}, JSON_PRETTY_PRINT );
 	exit();
 	////
 # End
