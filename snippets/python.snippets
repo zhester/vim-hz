@@ -13,6 +13,7 @@ snippet b0
 	#=============================================================================
 snippet b1
 	    #=========================================================================
+# end of snippet
 
 # Section Comments
 snippet c0
@@ -43,6 +44,7 @@ snippet c6
 	                        #-----------------------------------------------------
 	                        # ${1}
 	                        #-----------------------------------------------------
+# end of snippet
 
 #=============================================================================
 # Function and Class Templates
@@ -143,6 +145,8 @@ snippet error
 	    ${2:description}
 	    """
 	    pass
+# end of snippet
+
 
 #-----------------------------------------------------------------------------
 # Python Protocol Templates
@@ -215,6 +219,7 @@ snippet descriptor
 	            )
 	        setattr( obj, self._name )
 	
+# end of snippet
 
 # File I/O Stream Emulation
 snippet streams
@@ -466,6 +471,7 @@ snippet streams
 	        """
 	        pass
 	
+# end of snippet
 
 # Mapping Type Emulation
 snippet map
@@ -686,6 +692,7 @@ snippet map
 	        """
 	        return self.$3.update( other )
 	
+# end of snippet
 
 # Sequence Type Emulation
 snippet sequence
@@ -951,6 +958,7 @@ snippet sequence
 	        """
 	        self.$3.sort( cmp, key, reverse )
 	
+# end of snippet
 
 #=============================================================================
 # Formatting and Style Templates
@@ -959,6 +967,16 @@ snippet sequence
 #=============================================================================
 # Literals and Common Implementations
 #=============================================================================
+
+# Unicode Boilerplace
+snippet uni
+	# when using as a script, write UTF-8 to stdout
+	if sys.stdout.encoding != 'UTF-8':
+	    import codecs
+	    writer = codecs.getwriter( 'UTF-8' )
+	    sys.stdout = writer( sys.stdout )
+# end of snippet
+
 
 #=============================================================================
 # Miscellaneous Automation
@@ -1029,6 +1047,7 @@ snippet shell
 	    import sys
 	    sys.exit( main( sys.argv ) )
 	
+# end of snippet
 
 # New Module with Built-in Unit Tests
 snippet module
@@ -1158,3 +1177,5 @@ snippet module
 	    import sys
 	    sys.exit( main( sys.argv ) )
 	
+# end of snippet
+
