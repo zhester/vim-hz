@@ -200,3 +200,104 @@ function! code#CommentBlock( ... )
 
 endfunction
 
+
+"=============================================================================
+" Converts a decimal string to a hexadecimal string prefixed with "0x"
+"
+" This function accepts single arguments, or it can operate on the current
+" line or range.
+"
+" code#d2h( 0, 0, '42' )    converts passed string to hexadecimal
+" code#d2h( 20, 40, '' )    converts all decimal strings between lines
+" code#d2h( 0, 0, '' )      converts all decimal strings on current line
+"=============================================================================
+function! code#d2h( line1, line2, arg ) range
+
+    " decimal string not explicitly passed
+    if empty( a:arg )
+
+        " look for a previous visual selection (ZIH?)
+        if ( histget( ':', -1 ) =~# "^'<,'>" ) && ( visualmode() !=# 'V' )
+            let l:cmd = 's/\%V\<\d\+\>/\=printf("0x%X",(submatch(0)+0))/g'
+
+        " default to given line/range
+        else
+            let l:cmd = 's/\<\d\+\>/\=printf("0x%X",(submatch(0)+0))/g'
+
+        endif
+
+        " attempt to execute the substitution command over the line/range
+        try
+            execute a:line1 . ',' . a:line2 . l:cmd
+        catch
+            echoerr 'No decimal number found'
+        endtry
+
+        " return nothing
+        return
+
+    endif
+
+    " decimal string passed, implicitly cast to an integer
+    let l:value = a:arg + 0
+
+    " determine display format based on magnitude of value
+    if l:value <= 0xFF
+        let l:fmt = '0x%02X'
+    elseif l:value <= 0xFFFF
+        let l:fmt = '0x%04X'
+    elseif l:value <= 0xFFFFFFFF
+        let l:fmt = '0x%08X'
+    else
+        let l:fmt = '0x%X'
+    endif
+
+    " return the hexadecimal representation of the value
+    return printf( l:fmt, l:value )
+
+endfunction
+
+
+"=============================================================================
+" Converts a hexadecimal string to a decimal string prefixed
+"
+" This function accepts single arguments, or it can operate on the current
+" line or range.
+"
+" code#h2d( 0, 0, '0x0A50' )    converts passed string to decimal
+" code#h2d( 0, 0, '0A50' )      converts passed string to decimal
+" code#h2d( 20, 40, '' )        converts all hex strings between lines
+" code#h2d( 0, 0, '' )          converts all hex strings on current line
+"=============================================================================
+function! code#h2d( line1, line2, arg ) range
+
+    " hex string not explicitly passed
+    if empty( a:arg )
+
+        " look for a previous visual selection (ZIH?)
+        if ( histget( ':', -1 ) =~# "^'<,'>" ) && ( visualmode() !=# 'V' )
+            let l:cmd = 's/\%V0x\x\+/\=(submatch(0)+0)/g'
+
+        " default to given line/range
+        else
+            let l:cmd = 's/0x\x\+/\=(submatch(0)+0)/g'
+
+        endif
+
+        " attempt to execute the substitution command over the line/range
+        try
+            execute a:line1 . ',' . a:line2 . l:cmd
+        catch
+            echoerr 'No hexadecimal number found'
+        endtry
+
+        " return nothing
+        return
+
+    endif
+
+    " hex string passed, convert to integer, and return
+    return ( a:arg =~? '^0x' ) ? ( a:arg + 0 ) : ( ( '0x' . a:arg ) + 0 )
+
+endfunction
+
