@@ -2,23 +2,31 @@
 
 # Enable display/logging of PHP errors in Apache configurations.
 snippet epe
-	# Enable PHP error reporting/logging.
-	php_value error_reporting -1
-	php_flag display_startup_errors on
-	php_flag display_errors on
-	php_flag html_errors off
-	#php_flag log_errors on
-	#php_value error_log  /${1:www}/${2:hzian.com}/php_temp_errors.log
+	<IfModule php5_module>
+	
+	    # Enable PHP error reporting/logging.
+	    php_value error_reporting -1
+	    php_flag display_startup_errors on
+	    php_flag display_errors on
+	    php_flag html_errors off
+	    #php_flag log_errors on
+	    #php_value error_log /${1:www}/${2:hzian.com}/php_temp_errors.log
+	
+	</IfModule>
 
 # Disable display/logging of PHP errors in Apache configurations.
 snippet dpe
-	# Disable PHP error reporting/logging.
-	php_value error_reporting 0
-	php_flag display_startup_errors off
-	php_flag display_errors off
-	php_flag html_errors off
-	php_flag log_errors off
-	#php_value error_log  /${1:www}/${2:hzian.com}/php_temp_errors.log
+	<IfModule php5_module>
+	
+	    # Disable PHP error reporting/logging.
+	    php_value error_reporting 0
+	    php_flag display_startup_errors off
+	    php_flag display_errors off
+	    php_flag html_errors off
+	    php_flag log_errors off
+	    #php_value error_log /${1:www}/${2:hzian.com}/php_temp_errors.log
+	
+	</IfModule>
 
 # Minimal server configuration.
 snippet conf
@@ -34,7 +42,7 @@ snippet conf
 	ServerRoot "${5:/usr/local/apache}"
 	ServerName ${2:HOSTNAME}.${3:hzian.net}:80
 	ServerAdmin ${4:admin@hzian.net}
-	DocumentRoot "${5}/htdocs"
+	DocumentRoot "$5/htdocs"
 	DirectoryIndex index.html
 	#DirectoryIndex index.php index.html
 	ErrorLog "logs/error.log"
@@ -43,11 +51,27 @@ snippet conf
 # Virtual host configuration section.
 snippet vh
 	<VirtualHost *:80>
-	    ServerAdmin ${3:admin@hzian.net}
-	    DocumentRoot "/${2:www}/${1:DOMAIN}/www"
-	    ServerName ${1}
-	    ServerAlias www.${1}
-	    ErrorLog "logs/${1}.error.log"
-	    #CustomLog "logs/${1}.access.log" common
+	    ServerAdmin ${3:zac.hester@gmail.com}
+	    DocumentRoot "/${2:www}/${1:DOMAIN}"
+	    ServerName $1
+	    ServerAlias www.$1
+	    ErrorLog "logs/$1-error.log"
+	    #CustomLog "logs/$1-access.log" common
+	    <Directory "/$2/$1">
+	        Options Indexes FollowSymLinks
+	        IndexIgnore .svn .git* tags
+	        AllowOverride all
+	        Require all granted
+	        <IfModule php5_module>
+	            php_flag display_errors off
+	            php_value error_reporting 0
+	        </IfModule>
+	        <IfModule rewrite_module>
+	            RewriteEngine on
+	            RewriteBase /
+	            RewriteCond %{HTTP_HOST} ^www\.(.+)$
+	            RewriteRule (.*) http://%1/\$1 [R=301,L]
+	        </IfModule>
+	    </Directory>
 	</VirtualHost>
 
