@@ -304,6 +304,13 @@ snippet plain
 	////
 # End
 
+# Inline Debugging Output
+snippet pre
+	////ZIH - temp
+	echo "<pre>$1\n";
+	print_r( \$${1:VARIABLE} );
+	echo '</pre>';
+# End
 
 #=============================================================================
 # Source Code Templates
