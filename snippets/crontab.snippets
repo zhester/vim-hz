@@ -1,0 +1,93 @@
+##############################################################################
+#
+# Crontab Snippets
+#
+##############################################################################
+
+#=============================================================================
+# Structural Comments
+#=============================================================================
+
+# Separator Bars
+snippet b0
+	#=============================================================================
+
+# Section Comments
+snippet c0
+	#-----------------------------------------------------------------------------
+	# ${1}
+	#-----------------------------------------------------------------------------
+
+#=============================================================================
+# Function and Class Templates
+#=============================================================================
+
+#=============================================================================
+# Formatting and Style Templates
+#=============================================================================
+
+#=============================================================================
+# Literals and Common Implementations
+#=============================================================================
+
+snippet cmd
+	# ${7:COMMENT}
+	${2:0} ${3:*} ${4:*} ${5:*} ${6:*} ${1:COMMAND}
+# end
+
+snippet ten
+	# every 10 minutes
+	#*/10 * * * * /command/ten-minutely
+# end
+
+snippet half
+	# every 30 minutes at *:15 and *:45
+	#15,45 * * * * /command/half-hourly
+# end
+
+snippet hour
+	# every hour at *:00
+	#0 * * * * /command/hourly
+# end
+
+snippet day
+	# every day at 2:34 PM
+	#34 14 * * * /command/daily
+# end
+
+snippet week
+	# every week at 1:01 AM Sunday morning
+	#1 1 * * 0 /command/weekly
+# end
+
+snippet month
+	# every month at 9:30 AM on the 5th
+	#30 9 5 * * /command/weekly
+# end
+
+#=============================================================================
+# Miscellaneous Automation
+#=============================================================================
+
+#=============================================================================
+# Source Code Templates
+#=============================================================================
+
+snippet user
+	SHELL=/bin/sh
+	PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+	MAILTO=${1:zac.hester@gmail.com}
+	
+	# minute hour mday month wday command
+	
+# end of snippet
+
+snippet root
+	SHELL=/bin/sh
+	PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin
+	MAILTO=${1:zac.hester@gmail.com}
+	
+	# minute hour mday month wday user command
+	
+# end of snippet
+
