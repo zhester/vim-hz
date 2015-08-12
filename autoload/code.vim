@@ -301,3 +301,14 @@ function! code#h2d( line1, line2, arg ) range
 
 endfunction
 
+
+"=============================================================================
+" Smart line splitting in the spirit of the default join operation.
+"
+" This was taken from a post on reddit.com/r/vim, user -romainl-.
+"=============================================================================
+function! code#SplitLine()
+    s/\(.\{-}\)\(\s*\)\(\%#\)\(\s*\)\(.*\)/\1\r\3\5
+    call histdel( '/', -1 )
+endfunction
+
