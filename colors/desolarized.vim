@@ -45,7 +45,7 @@ hi LineNr           cterm=none      ctermbg=0       ctermfg=10
 " StatusLine
 hi SLCursor         cterm=none      ctermbg=11      ctermfg=3
 hi SLFileInfo       cterm=none      ctermbg=11      ctermfg=4
-hi SLFileName       cterm=bold      ctermbg=11      ctermfg=3
+hi SLFileName       cterm=none      ctermbg=11      ctermfg=3
 hi SLFlags          cterm=none      ctermbg=11      ctermfg=1
 hi SLPlace          cterm=none      ctermbg=11      ctermfg=3
 hi SLToggle         cterm=none      ctermbg=11      ctermfg=9
@@ -57,7 +57,7 @@ hi Pmenu            cterm=none      ctermbg=0       ctermfg=12
 hi PmenuSbar        cterm=none      ctermbg=0       ctermfg=0
 hi PmenuSel         cterm=none      ctermbg=11      ctermfg=3
 hi PmenuThumb       cterm=none      ctermbg=11      ctermfg=3
-hi WildMenu         cterm=bold      ctermbg=11      ctermfg=3
+hi WildMenu         cterm=none      ctermbg=11      ctermfg=3
 
 " Command Entry/Results
 " hi ModeMsg          cterm=none      ctermbg=none    ctermfg=none
@@ -84,7 +84,7 @@ hi VertSplit        cterm=none      ctermbg=11      ctermfg=12
 "-----------------------------------------------------------------------------
 
 " Searching
-hi IncSearch        cterm=bold      ctermbg=8       ctermfg=1
+hi IncSearch        cterm=none      ctermbg=8       ctermfg=1
 hi Search           cterm=underline ctermbg=none    ctermfg=13
 
 " Spell Checking
@@ -149,7 +149,7 @@ hi link Number Constant
 hi link StringDelimiter String
 
 " Named Identifiers
-hi Function         cterm=bold      ctermbg=none    ctermfg=12
+hi Function         cterm=none      ctermbg=none    ctermfg=12
 hi Identifier       cterm=none      ctermbg=none    ctermfg=7
 
 " Language Constructs
@@ -159,7 +159,7 @@ hi Identifier       cterm=none      ctermbg=none    ctermfg=7
 " hi Label            cterm=none      ctermbg=none    ctermfg=none
 hi Operator         cterm=none      ctermbg=none    ctermfg=1
 " hi Repeat           cterm=none      ctermbg=none    ctermfg=none
-hi Statement        cterm=bold      ctermbg=none    ctermfg=15
+hi Statement        cterm=none      ctermbg=none    ctermfg=15
 " hi Tag              cterm=none      ctermbg=none    ctermfg=none
 
 " Preprocessor
