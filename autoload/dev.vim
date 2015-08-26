@@ -69,3 +69,41 @@ function! dev#OpenSnippet( ... )
 
 endfunction
 
+
+"=============================================================================
+" Loads content from a string into a preview window.
+"
+" @param string The string to load into the preview window
+" @param title  The "title" to display (the file name on the statusline)
+" @param ftype  Optional value for `filetype` (for syntax highlighting)
+"=============================================================================
+function! dev#PreviewString( string, title, ... )
+
+    " Split string into individual lines (makes everything better).
+    let l:lines     = split( a:string, "\n" )
+    let l:num_lines = len( l:lines )
+
+    " Open a preview window on the bottom of the view.
+    silent! execute 'noautocmd bot pedit ' . fnameescape( a:title )
+
+    " Focus on the new preview window, and configure it appropriately.
+    silent! noautocmd wincmd P
+    silent! setlocal buftype=nofile bufhidden=wipe
+    silent! setlocal nobuflisted noswapfile nowrap nonumber
+
+    " See if we should set a filetype for the preview.
+    if a:0 > 0
+        silent! execute 'setlocal filetype=' . a:1
+    endif
+
+    " Resize the preview window around the content.
+    silent! execute 'resize ' . l:num_lines
+
+    " Create a buffer-specific map to close the preview window.
+    silent! nnoremap <silent> <buffer> q :q<CR>
+
+    " Load the string (make setline handle each line) into the preview window.
+    call setline( '$', l:lines )
+
+endfunction
+
