@@ -310,5 +310,6 @@ endfunction
 function! code#SplitLine()
     s/\(.\{-}\)\(\s*\)\(\%#\)\(\s*\)\(.*\)/\1\r\3\5
     call histdel( '/', -1 )
+    normal! ==
 endfunction
 
