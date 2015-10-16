@@ -2,11 +2,7 @@
 "
 " hz.vim
 "
-" Various Utility Functions
-"
-" Note: This plugin was started to implement functionality I later moved to my
-" personal key mappings (it was easier than I thought it would be).  Leaving
-" this here because I'll probably start using it later.
+" Personal Development Plugin
 "
 "=============================================================================
 
@@ -25,6 +21,12 @@ command! -nargs=? -range H2D call code#h2d( <line1>, <line2>, '<args>' )
 "-----------------------------------------------------------------------------
 " Mappings
 "-----------------------------------------------------------------------------
+
+" indent-level text object mappings
+onoremap <silent>ai :<C-u>call code#VIndent(1)<CR>
+onoremap <silent>ii :<C-u>call code#VIndent(0)<CR>
+vnoremap <silent>ai :<C-u>call code#VIndent(1)<CR>
+vnoremap <silent>ii :<C-u>call code#VIndent(0)<CR>
 
 "-----------------------------------------------------------------------------
 " Automation
@@ -52,11 +54,11 @@ if has( 'autocmd' )
     " 3. Shut off highlighting in the message area.
     " 4. Force redraw to avoid the confirmation.
     "-------------------------------------------------------------------------
-    autocmd hz VimEnter *
-        \ echohl PreProc | echon 'Tip of the day: ' |
-        \ echohl Type | echon memory#OfTheDay() |
-        \ echohl None |
-        \ redraw
+    "autocmd hz VimEnter *
+    "    \ echohl PreProc | echon 'Tip of the day: ' |
+    "    \ echohl Type | echon memory#OfTheDay() |
+    "    \ echohl None |
+    "    \ redraw
 
 endif
 

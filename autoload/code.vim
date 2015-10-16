@@ -13,7 +13,6 @@
 " - implement argument/literal line splitter/joiner
 " - implement argument/literal position swapper/shifter
 " - implement right-hand-side comment reformat/reflow
-" - implement snake-case/camel-case part text objects (plugin exists)
 "
 "=============================================================================
 
@@ -311,5 +310,128 @@ function! code#SplitLine()
     s/\(.\{-}\)\(\s*\)\(\%#\)\(\s*\)\(.*\)/\1\r\3\5
     call histdel( '/', -1 )
     normal! ==
+endfunction
+
+
+"=============================================================================
+" Scans the buffer for a line matching a requested pattern.
+"
+" @param line    The starting line number
+" @param goal    The target pattern to find
+" @param reverse Seek the buffer in reverse
+" @param ignore  Optional pattern that, when matched, skips lines in the scan
+"                By default, a pattern to ignore empty lines is used.
+" @return        A list of two line numbers:
+"                   0: The line that matches the requested indent level
+"                   1: The closest line that contains content below the
+"                      requested indent level
+"                If no matching line is found, one of the buffer's extents is
+"                returned (depending on the `reverse` parameter).
+"                If there is no internal content, the content line number will
+"                be 0.
+"=============================================================================
+function! code#ScanLines( line, goal, ... )
+
+    " Default the optional arguments.
+    let l:reverse = ( ( a:0 >= 1 ) && a:1 ) ?   1 : 0
+    let l:ignore  = (   a:0 >= 2          ) ? a:2 : '^\s*$'
+
+    " Initialize buffer and content tracking state.
+    let l:content_line = 0
+    let l:current_line = a:line
+    let l:increment    = l:reverse ? -1 : 1
+    let l:terminal     = l:reverse ?  1 : line( '$' )
+
+    " Scan until we reach the extent of the buffer.
+    while l:current_line != l:terminal
+
+        " Fetch contents of current line.
+        let l:content = getline( l:current_line )
+
+        " Test line to see if we need to evalute it.
+        if l:content !~ l:ignore
+
+            " Evaluate line for goal pattern.
+            if l:content =~ a:goal
+
+                " Return the line where the goal pattern was matched.
+                return [ l:current_line, l:content_line ]
+
+            endif
+
+            " Update the last line to contain non-skipped content.
+            let l:content_line = l:current_line
+
+        endif
+
+        " Move line index to 'next' line.
+        let l:current_line += l:increment
+
+    endwhile
+
+    " Requested indentation level was never found.  Return terminal value.
+    return [ l:terminal, l:content_line ]
+
+endfunction
+
+
+"=============================================================================
+" Selects all the code indented at or above the current line's indentation
+" level.
+"
+" @param capture Optionally specify block capturing behavior
+"                   0: capture only lines of the same level (default)
+"                   1: capture the initial lines of the enclosing level
+"                   2: capture the trailling lines of the enclosing level
+"=============================================================================
+function! code#VIndent( ... )
+
+    " Default the optional argument.
+    let l:capture = a:0 >= 1 ? a:0 : 0
+
+    " Get information on the current line and buffer.
+    let l:current_line = line( '.' )
+    let l:last_line    = line( '$' )
+    let l:level        = indent( l:current_line )
+    let l:parent_level = l:level - &shiftwidth
+    let l:goal         = '\v^ {' . l:parent_level . '}[^ ]'
+    let l:ignore       = '\v^\s*(#|$)'
+
+    " Get the starting information of the most 'current' block.
+    let l:start = code#ScanLines( l:current_line, l:goal, 1, l:ignore )
+
+    " The count specifies how many indented blocks to grab.
+    let l:blocks_left = v:count1
+
+    " Iterate through all the requested blocks.
+    while l:blocks_left > 0
+
+        " Get the ending information of the most 'current' block.
+        let l:end = code#ScanLines( l:current_line, l:goal, 0, l:ignore )
+
+        " See if we hit the end of the buffer.
+        if l:end[ 0 ] == l:last_line
+            break
+        endif
+
+        " ZIH - not very robust - need to scan at this level
+
+        " Update to the next block for the next pass.
+        let l:current_line = l:end[ 0 ] + 1
+
+        " Decrement the block count.
+        let l:blocks_left -= 1
+
+    endwhile
+
+    " ZIH - still need to implement inclusive capturing behaviors
+
+    " ZIH - test for blocks that have no content (shouldn't happen)
+
+    " Update or create the line-wise visual selection for the indentation.
+    call cursor( l:start[ 1 ], 1 )
+    normal! 0V
+    call cursor( l:end[ 1 ], 1 )
+
 endfunction
 
