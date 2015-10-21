@@ -989,10 +989,15 @@ snippet uni
 # Generic Shell Script
 snippet shell
 	#!/usr/bin/env python
-	
+	#=============================================================================
+	#
+	# ${1:Shell Script}
+	#
+	#=============================================================================
 	
 	"""
-	${1:A Shell Script}
+	$1
+	========
 	"""
 	
 	
@@ -1003,6 +1008,7 @@ snippet shell
 	def main( argv ):
 	    """
 	    Script execution entry point
+	
 	    @param argv List of arguments passed to the script
 	    @return     Shell exit code (0 = success)
 	    """
@@ -1038,12 +1044,11 @@ snippet shell
 	    $2print 'Template code executed.  Replace with real code.'
 	
 	    # return success
-	    return os.EX_OK
+	    return 0
 	
 	
 	#=============================================================================
 	if __name__ == "__main__":
-	    import os
 	    import sys
 	    sys.exit( main( sys.argv ) )
 	
