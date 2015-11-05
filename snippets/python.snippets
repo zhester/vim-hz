@@ -74,10 +74,11 @@ snippet meth
 	        ${3:pass}
 snippet class
 	#=============================================================================
-	class ${1:name}( object ):
+	class ${1:name}( ${3:object} ):
 	    """
 	    ${2:description}
 	    """
+	
 	
 	    #=========================================================================
 	    def __init__( self ):
@@ -88,10 +89,11 @@ snippet class
 	
 snippet classargs
 	#=============================================================================
-	class ${1:name}( object ):
+	class ${1:name}( ${3:object} ):
 	    """
 	    ${2:description}
 	    """
+	
 	
 	    #=========================================================================
 	    def __init__( self, *args, **kwargs ):
@@ -106,6 +108,7 @@ snippet dict
 	    """
 	    ${2:description}
 	    """
+	
 	
 	    #=========================================================================
 	    def __init__( self, *args, **kwargs ):
@@ -140,7 +143,7 @@ snippet dict
 	
 snippet error
 	#=============================================================================
-	class ${1:ModuleError}( RuntimeError ):
+	class ${1:ModuleError}( ${3:RuntimeError} ):
 	    """
 	    ${2:description}
 	    """
@@ -152,13 +155,48 @@ snippet error
 # Python Protocol Templates
 #-----------------------------------------------------------------------------
 
+# Iterator Method Group
+snippet iter
+	    #=========================================================================
+	    def __iter__( self ):
+	        """
+	        Declare iterator support.
+	
+	        @return The iterable object for this instance
+	        """
+	        return self
+	
+	
+	    #=========================================================================
+	    def __next__( self ):
+	        """
+	        Retrieves the next value in the sequence.
+	
+	        @return The next value in the sequence
+	        @throws StopIteration when there are no more items in sequence
+	        """
+	        raise StopIteration()
+	
+	
+	    #=========================================================================
+	    def next( self ):
+	        """
+	        Retrieves the next value in the sequence (Python 2 support).
+	
+	        @return The next value in the sequence
+	        """
+	        return self.__next__()
+	
+# end of snippet
+
 # Descriptor Template
 snippet descriptor
 	#=============================================================================
-	class ${1:Descriptor}( object ):
+	class ${1:Descriptor}( ${3:object} ):
 	    """
 	    ${2:A Descriptor}
 	    """
+	
 	
 	    #=========================================================================
 	    def __init__( self, name, doc = '' ):
@@ -1001,6 +1039,9 @@ snippet shell
 	"""
 	
 	
+	import sys
+	
+	
 	__version__ = '0.0.0'
 	
 	
@@ -1049,7 +1090,6 @@ snippet shell
 	
 	#=============================================================================
 	if __name__ == "__main__":
-	    import sys
 	    sys.exit( main( sys.argv ) )
 	
 # end of snippet
@@ -1067,6 +1107,10 @@ snippet module
 	$1
 	========
 	"""
+	
+	
+	import os
+	import sys
 	
 	
 	__version__ = '0.0.0'
@@ -1183,8 +1227,6 @@ snippet module
 	
 	#=============================================================================
 	if __name__ == "__main__":
-	    import os
-	    import sys
 	    sys.exit( main( sys.argv ) )
 	
 # end of snippet

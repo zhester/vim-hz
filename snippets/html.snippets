@@ -5,6 +5,7 @@ snippet b0
 	<!-- ===================================================================== -->
 snippet b1
 	  <!-- =================================================================== -->
+# End
 
 # Comment Blocks
 snippet c0
@@ -15,6 +16,7 @@ snippet c1
 	  <!-- -----------------------------------------------------------------------
 	  ${1}
 	  ------------------------------------------------------------------------ -->
+# End
 
 # Starter Document
 snippet html
@@ -30,6 +32,7 @@ snippet html
 	  ${1}
 	</body>
 	</html>
+# End
 
 # Simple/Development App Template
 snippet app
@@ -55,6 +58,7 @@ snippet app
 	  ${2}
 	</body>
 	</html>
+# End
 
 # Starter XHTML Document
 snippet xhtml
@@ -80,18 +84,21 @@ snippet xhtml
 	</div>
 	</body>
 	</html>
+# End
 
 # Inline CSS for XHTML
 snippet xcss
 	<style type="text/css"><![CDATA[
 	  ${1}
 	]]></style>
+# End
 
 # Inline JavaScript for XHTML
 snippet xjs
 	<script type="text/javascript"<![CDATA[
 	  ${1}
 	]]></script>
+# End
 
 # Table Blank
 snippet table
@@ -105,6 +112,7 @@ snippet table
 	    </tr>
 	  </tbody>
 	</table>
+# End
 
 # Definition List Blank
 snippet dl
@@ -112,18 +120,26 @@ snippet dl
 	  <dt>${1:term}</dt>
 	  <dd>${2:definition}</dd>
 	</dl>
+# End
 
 # Unordered List Blank
 snippet ul
 	<ul>
 	  <li>${1:item}</li>
 	</ul>
+# End
 
 # Ordered List Blank
 snippet ol
 	<ol>
 	  <li>${1:item}</li>
 	</ol>
+# End
+
+# Other Block Elements
+snippet bq
+	<blockquote>${1}</blockquote>
+# End
 
 # Tag Blanks
 snippet a
@@ -132,6 +148,7 @@ snippet img
 	<img src="${1:url}" title="${2:title}" alt="$2">
 snippet input
 	<input type="${1:text}" name="${2:name}" id="$2"${3}>
+# End
 
 # Form Blank
 snippet form
@@ -144,6 +161,7 @@ snippet form
 	    </p>
 	  </fieldset>
 	</form>
+# End
 
 # Radio Button Blank
 snippet radio
@@ -164,12 +182,14 @@ snippet radio
 	    </li>
 	  </ul>
 	</fieldset>
+# End
 
 # Select Widget Blank
 snippet select
 	<select name="${1:name}" id="$1">
 	  <option value="${2:value}">${3:Value}</option>
 	</select>
+# End
 
 # Content Sections
 snippet s1
@@ -202,4 +222,12 @@ snippet s6
 	<p>
 	${2}
 	</p>
+# End
+
+# Code Tags
+snippet code
+	<pre><code>${1}</code></pre>
+snippet lit
+	<code>${1}</code>
+# End
 
