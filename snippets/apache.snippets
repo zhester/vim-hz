@@ -28,6 +28,26 @@ snippet dpe
 	
 	</IfModule>
 
+# URL rewriting with subdomain correction and direct path remapping.
+snippet rewrite
+	<IfModule rewrite_module>
+	
+	    # Enable rewriting.
+	    RewriteEngine On
+	
+	    # Fix requests with a leader "www" subdomain.
+	    RewriteCond %{HTTP_HOST} ^www\.(.+)$
+	    RewriteRule (.*) http://%1/$1 [R=301,L]
+	
+	    # Match any requests for non-existant files or directories.
+	    RewriteCond %{REQUEST_FILENAME} !-f
+	    RewriteCond %{REQUEST_FILENAME} !-d
+	
+	    # Rewrite request into index handler.
+	    RewriteRule ^(.*)$ index.php [L]
+	
+	</IfModule>
+
 # Minimal server configuration.
 snippet conf
 	Listen 10.0.0.${1:254}:80
