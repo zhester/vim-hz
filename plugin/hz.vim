@@ -14,15 +14,21 @@
 " Commands
 "-----------------------------------------------------------------------------
 
-" custom hexadecimal conversion commands
+" Custom hexadecimal conversion commands
 command! -nargs=? -range D2H call code#d2h( <line1>, <line2>, '<args>' )
 command! -nargs=? -range H2D call code#h2d( <line1>, <line2>, '<args>' )
+
+" File renaming utility commands
+command! -nargs=? ListPairs call util#ListPairs( '<args>' )
+command! -nargs=? LP call util#ListPairs( '<args>' )
+command! -range RenamePairs call util#RenamePairs( <line1>, <line2> )
+command! -range RP call util#RenamePairs( <line1>, <line2> )
 
 "-----------------------------------------------------------------------------
 " Mappings
 "-----------------------------------------------------------------------------
 
-" indent-level text object mappings
+" Indent-level text object mappings
 onoremap <silent>ai :<C-u>call code#VIndent(1)<CR>
 onoremap <silent>ii :<C-u>call code#VIndent(0)<CR>
 vnoremap <silent>ai :<C-u>call code#VIndent(1)<CR>
