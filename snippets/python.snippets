@@ -1250,3 +1250,114 @@ snippet source
 	
 # end of snippet
 
+# New unittest Test Script
+snippet test
+	#!/usr/bin/env python
+	#=============================================================================
+	#
+	# ${1:module} Module Unit Tests
+	#
+	#=============================================================================
+	
+	"""
+	$1 Module Unit Tests
+	============================
+	"""
+	
+	
+	import unittest
+	
+	
+	import $1
+	
+	
+	__version__ = '0.0.0'
+	
+	
+	#=============================================================================
+	class $1Tests( unittest.TestCase ):
+	    """
+	    Tests the $1 module
+	    """
+	
+	
+	    #=========================================================================
+	    def setUp( self ):
+	        """
+	        Performs test setup.
+	        """
+	        pass
+	
+	
+	    #=========================================================================
+	    def test_${2:method}( self ):
+	        """
+	        Tests the $1.$2 method.
+	        """
+	        pass
+	
+	
+	# Run tests when run directly from the shell.
+	if __name__ == '__main__':
+	    unittest.main()
+	
+# end of snippet
+
+# unittest Special Methods
+snippet tmeth
+	    def tearDown( self ):
+	        """
+	        Performs test tear-down.
+	        """
+	        pass
+	
+	
+	    def runTest( self ):
+	        """
+	        Performs simple tests.
+	        """
+	        pass
+	
+	
+# end of snippet
+
+# unittest Assertion Reference
+snippet tass
+	        # All can take a msg = 'message' keyword argument.
+	        # Value comparison, checking
+	        self.assertEqual( a, b )
+	        self.assertNotEqual( a, b )
+	        self.assertTrue( x )
+	        self.assertFalse( x )
+	        self.assertIs( a, b )
+	        self.assertIsNot( a, b )
+	        self.assertIsNone( x )
+	        self.assertIsNotNone( x )
+	        self.assertAlmostEqual( a, b, places = 7 )
+	        self.assertNotAlmostEqual( a, b, places = 7 )
+	        self.assertGreater( a, b )
+	        self.assertGreaterEqual( a, b )
+	        self.assertLess( a, b )
+	        self.assertLessEqual( a, b )
+	        # Object interrogation
+	        self.assertIn( a, b )
+	        self.assertNotIn( a, b )
+	        self.assertIsInstance( a, b )
+	        self.assertIsNotInstance( a, b )
+	        # Exceptions
+	        self.assertRaises( exc, fun, *args, **kwargs )
+	        self.assertRaisesRegexp( exc, expr, fun, *args, **kwargs )
+	        # Text matches a regular expression
+	        self.assertRegexpMatches( text, expr )
+	        self.assertNotRegexpMatches( text, expr )
+	        # Composite type contents
+	        self.assertItemsEqual( actual, expected )
+	        self.assertTypeEqualityFunc( typeobj, function )
+	        self.assertMultiLineEqual( a, b )
+	        self.assertSequenceEqual( a, b )
+	        self.assertListEqual( a, b )
+	        self.assertTupleEqual( a, b )
+	        self.assertSetEqual( a, b )
+	        self.assertDictEqual( expected, actual )
+# end of snippet
+
