@@ -8,6 +8,46 @@
 
 
 "=============================================================================
+" Fetches syntax match groups for the given or current character.
+"
+" @param line Optionally specify the line to interrogate
+" @param col  Optionally specify the column to interrogate
+" @return     A string describing the syntax group stack
+"=============================================================================
+function! dev#GetSyntax( ... )
+
+    " Check or default the cursor position.
+    let l:line  = a:0 > 0 ? a:1 : line( '.' )
+    let l:col   = a:0 > 1 ? a:2 : col( '.' )
+
+    " Create a list of strings describing the syntax stack.
+    let l:stack = []
+    for l:id in synstack( l:line, l:col )
+
+        " Get the name of the syntax group.
+        let l:name = synIDattr( l:id, 'name' )
+
+        " Check for syntax IDs that are linked to effective IDs.
+        let l:tid  = synIDtrans( l:id )
+        if l:id != l:tid
+
+            " Append the translated group name.
+            let l:name .= ':' . synIDattr( l:tid, 'name' )
+        endif
+
+        " Add group name to list.
+        call add( l:stack, l:name )
+
+    endfor
+
+    " Return a description of the syntax stack.
+    return join( l:stack, '/' )
+
+endfunction
+command! Syntax :echo dev#GetSyntax()
+
+
+"=============================================================================
 " Inserts something to the buffer.
 "
 " @param text The text to insert below the current line.
@@ -68,6 +108,12 @@ function! dev#OpenSnippet( ... )
     execute 'edit ' . l:snipfile
 
 endfunction
+function! dev#OpenSnippets()
+    call dev#OpenSnippet()
+endfunction
+command! OpenSnippet :call dev#OpenSnippet()
+command! OpenSnippets :call dev#OpenSnippet()
+command! OS :call dev#OpenSnippet()
 
 
 "=============================================================================
