@@ -305,13 +305,14 @@ endfunction
 " The first motion that successfully moves the cursor terminates the function.
 "
 " @param motions The list of motion commands as strings
-" @return        1 if the cursor moved, otherwise 0
+" @return        The number of character positions moved
 "=============================================================================
 function! code#MoveCursor( motions )
 
-    " Record the initial cursor position.
+    " Record and mark the initial cursor position.
     let l:col_init  = col( '.' )
     let l:line_init = line( '.' )
+    normal! mq
 
     " Attempt each requested motion.
     for l:motion in a:motions
@@ -326,8 +327,11 @@ function! code#MoveCursor( motions )
         " Check to see if the cursor has changed columns.
         if ( l:col_init != l:col_curr ) || ( l:line_init != l:line_curr )
 
-            " The cursor moved.
-            return 1
+            " Yank everything between cursor and mark.
+            normal! "qy`q
+
+            " Return number of characters yanked to register.
+            return strlen( @q )
 
         endif
 
@@ -447,7 +451,7 @@ function! code#SeparatorObject( char, ... )
     elseif ( l:colo > 0 ) && ( l:line[ l:colo - 1 ] != a:char )
 
         " Attempt to move cursor to previous character.
-        call MoveCursor( [ l:keys[ 0 ] . a:char, 'b' ] )
+        call code#MoveCursor( [ l:keys[ 0 ] . a:char, 'b' ] )
 
     endif
 
@@ -455,7 +459,7 @@ function! code#SeparatorObject( char, ... )
     normal! v
 
     " Attempt to move to next character with a count.
-    call MoveCursor( [ l:count . l:keys[ 1 ] . a:char, 'e' ] )
+    call code#MoveCursor( [ l:count . l:keys[ 1 ] . a:char, 'e' ] )
 
 endfunction
 
