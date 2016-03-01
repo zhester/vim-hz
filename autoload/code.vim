@@ -8,7 +8,6 @@
 " ----
 "
 " - implement an indent/unindent for block comments
-" - implement align on char ("=") for enums/dictionaries/variable lists
 " - implement argument/literal text objects
 " - implement argument/literal line splitter/joiner
 " - implement argument/literal position swapper/shifter
@@ -302,6 +301,45 @@ endfunction
 
 
 "=============================================================================
+" Attempts to move the cursor using a list of normal mode motion commands.
+" The first motion that successfully moves the cursor terminates the function.
+"
+" @param motions The list of motion commands as strings
+" @return        1 if the cursor moved, otherwise 0
+"=============================================================================
+function! code#MoveCursor( motions )
+
+    " Record the initial cursor position.
+    let l:col_init  = col( '.' )
+    let l:line_init = line( '.' )
+
+    " Attempt each requested motion.
+    for l:motion in a:motions
+
+        " Attempt to move the cursor using the current motion.
+        execute 'normal! ' . l:motion
+
+        " Update the current cursor position.
+        let l:col_curr  = col( '.' )
+        let l:line_curr = line( '.' )
+
+        " Check to see if the cursor has changed columns.
+        if ( l:col_init != l:col_curr ) || ( l:line_init != l:line_curr )
+
+            " The cursor moved.
+            return 1
+
+        endif
+
+    endfor
+
+    " The cursor was not moved.
+    return 0
+
+endfunction
+
+
+"=============================================================================
 " Smart line splitting in the spirit of the default join operation.
 "
 " This was taken from a post on reddit.com/r/vim, user -romainl-.
@@ -371,6 +409,53 @@ function! code#ScanLines( line, goal, ... )
 
     " Requested indentation level was never found.  Return terminal value.
     return [ l:terminal, l:content_line ]
+
+endfunction
+
+
+"=============================================================================
+" Implements visual selection based on separators.  This is intended to be
+" used in combination with the appropriate key mappings to provide text
+" objects with robust edge-case handling and object counting.
+"
+" @param char  The character to use as a separator/delimiter
+" @param count Optional number of objects to select, default is 1
+" @param isall Optionally request 'all'/'around' object semantics
+"=============================================================================
+function! code#SeparatorObject( char, ... )
+
+    " Optional count argument for number of chunks to include.
+    let l:count = a:0 >= 1 ? a:1 : 1
+
+    " Optional flag to specify 'all'/'around' object semantics.
+    let l:isall = a:0 >= 2 ? a:2 : 0
+
+    " Set motion keys depending on object inclusion.
+    let l:keys  = l:isall ? 'Ff' : 'Tt'
+
+    " Get current column offset and line content.
+    let l:colo = col( '.' ) - 1
+    let l:line = getline( '.' )
+
+    " Check if we are on the target character.
+    if l:line[ l:colo ] == a:char
+
+        " Advance to next character.
+        normal! l
+
+    " Check if reverse motion is necessary.
+    elseif ( l:colo > 0 ) && ( l:line[ l:colo - 1 ] != a:char )
+
+        " Attempt to move cursor to previous character.
+        call MoveCursor( [ l:keys[ 0 ] . a:char, 'b' ] )
+
+    endif
+
+    " Enter visual mode.
+    normal! v
+
+    " Attempt to move to next character with a count.
+    call MoveCursor( [ l:count . l:keys[ 1 ] . a:char, 'e' ] )
 
 endfunction
 

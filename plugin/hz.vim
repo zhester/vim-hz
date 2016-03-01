@@ -14,6 +14,10 @@
 " Commands
 "-----------------------------------------------------------------------------
 
+" Save the buffer and close only this buffer (:wq for buffers).
+cnoreabbrev bq update<bar>bdelete
+cnoreabbrev bx update<bar>bdelete
+
 " Custom hexadecimal conversion commands
 command! -nargs=? -range D2H call code#d2h( <line1>, <line2>, '<args>' )
 command! -nargs=? -range H2D call code#h2d( <line1>, <line2>, '<args>' )
@@ -33,6 +37,17 @@ onoremap <silent>ai :<C-u>call code#VIndent(1)<CR>
 onoremap <silent>ii :<C-u>call code#VIndent(0)<CR>
 vnoremap <silent>ai :<C-u>call code#VIndent(1)<CR>
 vnoremap <silent>ii :<C-u>call code#VIndent(0)<CR>
+
+" Underscore symbol parts text object mappings
+xnoremap <silent>iu :<C-u>call code#SeparatorObject('_',v:count1)<CR>
+onoremap <silent>iu :call code#SeparatorObject('_',v:count1)<CR>
+xnoremap <silent>au :<C-u>call code#SeparatorObject('_',v:count1,1)<CR>
+onoremap <silent>au :call code#SeparatorObject('_',v:count1,1)<CR>
+
+" Auto-create _some_ blocks in C-like syntaxes.
+inoremap (<CR> (<CR>)<Esc>O
+inoremap [<CR> [<CR>]<Esc>O
+inoremap {<CR> {<CR>}<Esc>O
 
 "-----------------------------------------------------------------------------
 " Automation
