@@ -257,6 +257,43 @@ endfunction
 
 
 "=============================================================================
+" Reads the text out of the buffer between two positions specified as strings.
+"
+" The position specifiers are values that can be passed to `line()`.
+"
+" @param start The start position specifier
+" @param end   The end position specifier
+" @return      The text between both positions.
+"=============================================================================
+function! code#GetBetween( start, end )
+
+    " Get start and end line and column numbers.
+    let [ l:sl, l:sc ] = [ line( a:start ), col( a:start ) ]
+    let [ l:el, l:ec ] = [ line( a:end ), col( a:end ) ]
+    "return a:start . ' > ' . a:end . ' => '
+    "\ . join( l:sp, ',' ) . ':' . join( l:ep, ',' )
+
+    " Check for starting position occurring after ending position.
+    if ( l:sl > l:el ) || ( l:sc > l:ec )
+        let [ l:el, l:ec, l:sl, l:sc ] = [ l:sl, l:sc, l:el, l:ec ]
+    endif
+
+    " Fetch text on all lines between positions.
+    let l:lines = getline( l:sl, l:el )
+
+    " Trim the beginning of the first line.
+    let l:lines[ 0 ] = l:lines[ 0 ][ l:sc - 1 : ]
+
+    " Trim the end of the last line.
+    let l:lines[ -1 ] = l:lines[ -1 ][ : l:ec - 1 ]
+
+    " Return the retrieved text.
+    return join( l:lines, '\n' )
+
+endfunction
+
+
+"=============================================================================
 " Converts a hexadecimal string to a decimal string prefixed
 "
 " This function accepts single arguments, or it can operate on the current
@@ -327,11 +364,11 @@ function! code#MoveCursor( motions )
         " Check to see if the cursor has changed columns.
         if ( l:col_init != l:col_curr ) || ( l:line_init != l:line_curr )
 
-            " Yank everything between cursor and mark.
-            normal! "qy`q
+            " Fetch all characters between cursor and mark.
+            let l:text = code#GetBetween( '`q', '.' )
 
             " Return number of characters yanked to register.
-            return strlen( @q )
+            return strlen( l:text )
 
         endif
 
@@ -434,32 +471,43 @@ function! code#SeparatorObject( char, ... )
     " Optional flag to specify 'all'/'around' object semantics.
     let l:isall = a:0 >= 2 ? a:2 : 0
 
-    " Set motion keys depending on object inclusion.
-    let l:keys  = l:isall ? 'Ff' : 'Tt'
-
     " Get current column offset and line content.
     let l:colo = col( '.' ) - 1
     let l:line = getline( '.' )
 
-    " Check if we are on the target character.
-    if l:line[ l:colo ] == a:char
+    " Set reverse/forward motion depending on object inclusion.
+    let l:move = l:isall ? 'Ff' : 'Tt'
 
-        " Advance to next character.
-        normal! l
+    " Check for 'in' semantics.
+    if l:isall == 0
 
-    " Check if reverse motion is necessary.
-    elseif ( l:colo > 0 ) && ( l:line[ l:colo - 1 ] != a:char )
+        " Check if we are on the separator.
+        if l:line[ l:colo ] == a:char
 
-        " Attempt to move cursor to previous character.
-        call code#MoveCursor( [ l:keys[ 0 ] . a:char, 'b' ] )
+            " Advance to next character.
+            normal! l
+
+        " Past start of line, but previous character is not separator.
+        elseif ( l:colo > 0 ) && ( l:line[ l:colo - 1 ] != a:char )
+
+            " Attempt to move cursor to previous separator.
+            call code#MoveCursor( [ l:move[ 0 ] . a:char, 'b' ] )
+
+        endif
+
+    " Using 'all' semantics.
+    else
+
+        " Attempt to move cursor to previous separator.
+        call code#MoveCursor( [ l:move[ 0 ] . a:char, 'b' ] )
 
     endif
 
     " Enter visual mode.
     normal! v
 
-    " Attempt to move to next character with a count.
-    call code#MoveCursor( [ l:count . l:keys[ 1 ] . a:char, 'e' ] )
+    " Attempt to move to next separator with a count.
+    call code#MoveCursor( [ l:count . l:move[ 1 ] . a:char, 'e' ] )
 
 endfunction
 
