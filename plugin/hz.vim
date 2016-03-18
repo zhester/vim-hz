@@ -28,6 +28,15 @@ command! -nargs=? LP call util#ListPairs( '<args>' )
 command! -range RenamePairs call util#RenamePairs( <line1>, <line2> )
 command! -range RP call util#RenamePairs( <line1>, <line2> )
 
+" Run any shell command and read output into a temporary buffer.
+command! -nargs=* -complete=shellcmd R
+    \   new
+    \ | setlocal buftype=nofile bufhidden=delete noswapfile
+    \ | r !<args>
+
+" Run Python on the file in the buffer and read output into temporary buffer.
+command! -nargs=* P call shell#PyRun( <q-args> )
+
 "-----------------------------------------------------------------------------
 " Mappings
 "-----------------------------------------------------------------------------
@@ -48,6 +57,42 @@ onoremap <silent>au :call code#SeparatorObject('_',v:count1,1)<CR>
 inoremap (<CR> (<CR>)<Esc>O
 inoremap [<CR> [<CR>]<Esc>O
 inoremap {<CR> {<CR>}<Esc>O
+
+"-----------------------------------------------------------------------------
+" Leader Mappings
+"-----------------------------------------------------------------------------
+
+" Put currently open buffers (in separate windows) in diff mode.
+nnoremap <silent> <Leader>d :diffthis<CR>
+
+" Disable diff mode.
+nnoremap <silent> <Leader>D :diffoff<CR>
+
+" Execute contents of current line or selection.
+nnoremap <silent> <Leader>e "eyy:@e<CR>
+vnoremap <silent> <Leader>e "ey:'<,'>@e<CR>
+
+" Convert decimal numbers to hexadecimal.
+nnoremap <silent> <Leader>h :D2H<CR>
+vnoremap <silent> <Leader>h :'<,'>D2H<CR>
+
+" Convert hexadecimal numbers to decimal.
+nnoremap <silent> <Leader>H :H2D<CR>
+vnoremap <silent> <Leader>H :'<,'>H2D<CR>
+
+" Normalize quick-entry comments into nice-looking block comments.
+nnoremap <silent> <Leader>m :call code#CommentBlock()<CR>
+nnoremap <silent> <Leader>M :call code#CommentBlock( line( '.' ), 70 )<CR>
+
+" Toggle line numbering.
+nnoremap <silent> <Leader>n :call display#ToggleNumber()<CR>
+
+" Toggle relative line numbering.
+nnoremap <silent> <Leader>N :call display#ToggleRelativeNumber()<CR>
+
+" Trim trailing white sapce.
+nnoremap <silent> <Leader>r :%s/\s\+$//ge<CR>
+vnoremap <silent> <Leader>r <C-c>:%s/\%V\s\+$//ge<CR>
 
 "-----------------------------------------------------------------------------
 " Automation
