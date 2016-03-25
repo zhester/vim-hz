@@ -1,14 +1,17 @@
-*vim-hz.txt*    Personal Vim Plugin
-*vim-hz*
+*vim-hz.txt*            For Vim version 7.4           Last change: 2016-03-25
+*vim-hz*               A Personal Vim Plugin
 
 =============================================================================
 CONTENTS                                                    *vim-hz-contents*
 
-    1. About ................................... |vim-hz-about|
-    2. Requirements ............................ |vim-hz-requirements|
-    3. Configurations .......................... |vim-hz-configurations|
-        3.1. Snippets .......................... |vim-hz-snippets|
-        3.2. Syntax ............................ |vim-hz-syntax|
+    1. About .............................................. |vim-hz-about|
+    2. Requirements ................................ |vim-hz-requirements|
+    3. Configurations ............................ |vim-hz-configurations|
+        3.1. Snippets .................................. |vim-hz-snippets|
+        3.2. Syntax ...................................... |vim-hz-syntax|
+    4. Commands ........................................ |vim-hz-commands|
+    5. Text Objects .................................... |vim-hz-textobjs|
+    6. Key Maps ............................................ |vim-hz-maps|
 
 
 =============================================================================
@@ -154,4 +157,82 @@ it to be considered a "Constant."
 The default Python syntax does not concern itself with operators, so I also
 add the C-style operator matching to Python's syntax.  So far, it's worked
 well for my purposes.
+
+
+=============================================================================
+4. Commands                                                 *vim-hz-commands*
+
+Buffer Helpers~
+
+    bq              wq for a single buffer
+    bz              wq for a single buffer
+
+Code-writing Automation~
+
+    CB              Converts quick comments to formal block comments.
+    D2H             Converts decimal digits under cursor to hexadecimal.
+    H2D             Converts hexadecimal digits under cursor to decimal.
+
+Vim Management Automation~
+
+    OpenSnippets    Opens the snipMate snippet file for the current filetype.
+    OpenSnippet     Alias for `OpenSnippets`
+    OS              Alias for `OpenSnippets`
+
+Shell Interaction~
+
+    R               Gathers output from any command into a temporary buffer.
+    P               Like `R`, but runs the current buffer using Python.
+
+File Renaming Utility~
+
+The following commands are intended to provide an interactive way to rename
+files using regular expressions.  To use this feature, follow these steps:
+
+1. Switch the directory in question, or have it handy.
+2. Start Vim.
+3. Run `LP` to list files in the current direcotory or `LP {dir}` to list
+   files in another directory.
+4. Edit the file names in the right-hand column as needed.
+5. Select the list of files including the directory name at the top, and run
+   `RP` on the range.
+
+    ListPairs       Load list of files in given directory in two columns
+    LP              Alias for `ListPairs`
+    RenamePairs     Use two-columns of file names to rename files
+    RP              Alias for `RenamePairs`
+
+
+=============================================================================
+5. Text Objects                                             *vim-hz-textobjs*
+
+    ai      Match all text at and below the current indent level
+    ii      Match all text at and below the current indent level
+    au      Match characters including underscores up to word boundaries
+    iu      Match characters between underscores and word boundaries
+
+
+=============================================================================
+6. Key Maps                                                     *vim-hz-maps*
+
+    <Leader>d   Starts a diff between current and alternate buffer.
+    <Leader>D   Stops an active diff.
+
+    <Leader>e   (n) Execute line under cursor as VimScript.
+    <Leader>e   (v) Execute visual selection as VimScript.
+
+    <Leader>h   Decimal-to-hexadecimal digit converter
+    <Leader>H   Hexadecimal-to-decimal digit converter
+
+    <Leader>m   Formalize comments.
+    <Leader>M   Formalize comments out to column 70.
+
+    <Leader>n   Toggle line number display.
+    <Leader>N   Toggle relative line number display.
+
+    <Leader>r   Strip trailing white space.
+
+Additionally, when inserting <CR> after an open brace, bracket, or
+parenthesis, a closing brace, bracket, or parenthesis will be inserted below
+the cursor, and a new, empty line is started between the pairs.
 

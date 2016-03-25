@@ -18,13 +18,21 @@
 cnoreabbrev bq update<bar>bdelete
 cnoreabbrev bx update<bar>bdelete
 
+" Comment formalizing command
+command! CB call code#CommentBlock()
+
 " Custom hexadecimal conversion commands
 command! -nargs=? -range D2H call code#d2h( <line1>, <line2>, '<args>' )
 command! -nargs=? -range H2D call code#h2d( <line1>, <line2>, '<args>' )
 
+" Snippet management commands
+command! OpenSnippet :call dev#OpenSnippet()
+command! OpenSnippets :call dev#OpenSnippet()
+command! OS :call dev#OpenSnippet()
+
 " File renaming utility commands
-command! -nargs=? ListPairs call util#ListPairs( '<args>' )
-command! -nargs=? LP call util#ListPairs( '<args>' )
+command! -nargs=? -complete=file ListPairs call util#ListPairs( '<args>' )
+command! -nargs=? -complete=file LP call util#ListPairs( '<args>' )
 command! -range RenamePairs call util#RenamePairs( <line1>, <line2> )
 command! -range RP call util#RenamePairs( <line1>, <line2> )
 

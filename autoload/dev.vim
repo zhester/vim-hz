@@ -111,9 +111,6 @@ endfunction
 function! dev#OpenSnippets()
     call dev#OpenSnippet()
 endfunction
-command! OpenSnippet :call dev#OpenSnippet()
-command! OpenSnippets :call dev#OpenSnippet()
-command! OS :call dev#OpenSnippet()
 
 
 "=============================================================================
