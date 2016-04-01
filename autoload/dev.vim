@@ -150,3 +150,44 @@ function! dev#PreviewString( string, title, ... )
 
 endfunction
 
+
+"=============================================================================
+" Map of color names to ANSI escape codes used in SetTermColor().
+"=============================================================================
+let s:ansi_colors = {
+    \ 'foreground' : '10',
+    \ 'background' : '11',
+    \ 'cursor'     : '12',
+    \ 'black'      : '4;0',
+    \ 'red'        : '4;1',
+    \ 'green'      : '4;2',
+    \ 'yellow'     : '4;3',
+    \ 'blue'       : '4;4',
+    \ 'magenta'    : '4;5',
+    \ 'cyan'       : '4;6',
+    \ 'white'      : '4;7',
+    \ 'bblack'     : '4;8',
+    \ 'bred'       : '4;9',
+    \ 'bgreen'     : '4;10',
+    \ 'byellow'    : '4;11',
+    \ 'bblue'      : '4;12',
+    \ 'bmagenta'   : '4;13',
+    \ 'bcyan'      : '4;14',
+    \ 'bwhite'     : '4;15'
+\ }
+
+
+"=============================================================================
+" Sends an escape sequence to change one of the ANSI terminal colors.
+"
+" @param name  The name of the color to change as a string:
+"              foreground, background, cursor,
+"              black, red, green, yellow, blue, magenta, cyan, white,
+"              bblack, bred, bgreen, byellow, bblue, bmagenta, bcyan, bwhite
+" @param value The color value as a string: #RRGGBB
+"=============================================================================
+function! dev#SetTermColor( name, value )
+    let l:seq = "\x1B]" . s:ansi_colors[ a:name ] . ';\' . a:value . "\x07"
+    execute 'silent !/usr/bin/echo -ne "' . l:seq . '"'
+endfunction
+
