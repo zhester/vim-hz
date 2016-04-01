@@ -70,14 +70,6 @@ endfunction
 "=============================================================================
 function! HzPythonIndent( line_number )
 
-    " Get the syntax at the start of the line.
-    let l:start_syntax = synIDattr( synID( a:line_number, 1, 1 ), 'name' )
-
-    " Check for indentation within string literal (docstrings).
-    if l:start_syntax =~ 'String$'
-        return 0
-    endif
-
     " Line number of the previous line of code.
     let l:previous_line_number = s:prevcode( a:line_number - 1 )
 
