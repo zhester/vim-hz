@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Color Scheme Scratchpad</title>
+  <style>
+body {
+  margin: 0;
+  padding: 1em 3em;
+  color: #FFFFFF;
+  background-color: #000000;
+  font: 11pt/130% 'Input Mono', 'Source Code Pro', Consolas, monospace;
+}
+pre {
+  clear: both;
+  margin: 0.5em 0;
+  font: 11pt/130% 'Input Mono', 'Source Code Pro', Consolas, monospace;
+}
+.swatches {
+  width: 8em;
+  float: left;
+  margin: 0.5em 0;
+  padding: 0;
+  list-style: none;
+}
+  .swatches li {
+    margin: 0;
+    padding: 0.15em 1em;
+    text-align: center;
+  }
+  </style>
+  <script>
+colorset = [
+  'foreground', 'background', 'cursor',
+  'black',      'red',        'green',  'yellow',
+  'blue',       'magenta',    'cyan',   'white',
+  'bblack',     'bred',       'bgreen', 'byellow',
+  'bblue',      'bmagenta',   'bcyan',  'bwhite'
+];
+classmap = {
+  'Operator'  : 'bred',
+  'Function'  : 'bblue',
+  'Comment'   : 'bgreen',
+  'Constant'  : 'bcyan',
+  'Statement' : 'bwhite',
+  'PreProc'   : 'magenta',
+  'String'    : 'cyan',
+  'Parens'    : 'red'
+};
+schemes = {
+  'ansi' : [
+    [ 191, 191, 191 ], [   0,   0,   0 ], [ 191, 191, 191 ],
+    [   0,   0,   0 ], [ 191,   0,   0 ], [   0, 191,   0 ], [ 191, 191,   0 ],
+    [   0,   0, 191 ], [ 191,   0, 191 ], [   0, 191, 191 ], [ 191, 191, 191 ],
+    [  64,  64,  64 ], [ 255,  64,  64 ], [  64, 255,  64 ], [ 255, 255,  64 ],
+    [  64,  64, 255 ], [ 255,  64, 255 ], [  64, 255, 255 ], [ 255, 255, 255 ]
+  ],
+  'desolarized' : [
+    [ 238, 238, 238 ], [   0,  22,  32 ], [ 181, 137,   0 ],
+    [   8,  38,  42 ], [ 220,  50,  47 ], [  52, 140,  40 ], [ 181, 137,   0 ],
+    [  38, 139, 210 ], [ 211,  54, 130 ], [  42, 161, 152 ], [ 238, 238, 238 ],
+    [   0,  22,  32 ], [ 203,  75,  22 ], [  88, 110, 117 ], [  20,  50,  64 ],
+    [ 131, 148, 150 ], [ 108, 113, 196 ], [ 147, 161, 161 ], [ 250, 250, 250 ]
+  ],
+  'selene' : [
+    //ZIH - work in progress
+    '#D0D0D0', '#0C0C0C', '#646400',
+    [   0,   0,   0 ], '#CB4B16', [   0, 191,   0 ], [ 191, 191,   0 ],
+    [   0,   0, 191 ], [ 191,   0, 191 ], [   0, 191, 191 ], [ 191, 191, 191 ],
+    [   8,  38,  42 ], [ 220,  50,  47 ], [  52, 140,  40 ], [ 181, 137,   0 ],
+    [  38, 139, 210 ], [ 211,  54, 130 ], [  42, 161, 152 ], [ 238, 238, 238 ]
+  ]
+};
+function brightness( color ) {
+  var rp = color[ 0 ] / 255;
+  var gp = color[ 1 ] / 255;
+  var bp = color[ 2 ] / 255;
+  return Math.sqrt(
+      ( rp * rp * 0.299 )
+    + ( gp * gp * 0.587 )
+    + ( bp * bp * 0.114 )
+  );
+}
+function lightness( color ) {
+  var rp = color[ 0 ] / 255;
+  var gp = color[ 1 ] / 255;
+  var bp = color[ 2 ] / 255;
+  return ( Math.max( rp, gp, bp ) + Math.min( rp, gp, bp ) ) / 2;
+}
+function hstring( color ) {
+  var r = ( '00' + color[ 0 ].toString( 16 ).toUpperCase() ).slice( -2 );
+  var g = ( '00' + color[ 1 ].toString( 16 ).toUpperCase() ).slice( -2 );
+  var b = ( '00' + color[ 2 ].toString( 16 ).toUpperCase() ).slice( -2 );
+  return '#' + r + g + b;
+}
+function channels( colorstr ) {
+  if( colorstr[ 0 ] == '#' ) {
+    colorstr = colorstr.slice( 1 );
+  }
+  var r = colorstr.slice( 0, 2 );
+  var g = colorstr.slice( 2, 4 );
+  var b = colorstr.slice( 4, 6 );
+  return [ parseInt( r, 16 ), parseInt( g, 16 ), parseInt( b, 16 ) ];
+}
+function add_rule( sheet, selector, styles ) {
+  var pairs = [], attribute;
+  for( var prop in styles ) {
+    attribute = styles[ prop ];
+    if( typeof attribute !== 'string' ) {
+      attribute = hstring( attribute );
+    }
+    pairs.push( prop + ': ' + attribute + ';' );
+  }
+  var rule = selector + ' { ' + pairs.join( "\n" ) + ' }';
+  sheet.insertRule( rule, sheet.cssRules.length );
+}
+function set_syntax( name ) {
+  var elem = document.getElementById( 'current_style' );
+  if( elem != null ) {
+    document.head.removeChild( elem );
+  }
+  elem = document.createElement( 'style' );
+  elem.id = 'current_style';
+  document.head.appendChild( elem );
+  var sheet = elem.sheet;
+  if( name in schemes ) {
+    var s = schemes[ name ];
+    var color;
+    add_rule(
+      sheet,
+      'pre',
+      {
+        'color' : s[ colorset.indexOf( 'foreground' ) ],
+        'background-color' : s[ colorset.indexOf( 'background' ) ]
+      }
+    );
+    color = s[ colorset.indexOf( 'background' ) ];
+    add_rule( sheet, '' + classname, { 'background-color' : color } );
+    for( var classname in classmap ) {
+      color = s[ colorset.indexOf( classmap[ classname ] ) ];
+      add_rule( sheet, '.' + classname, { 'color' : color } );
+    }
+  }
+}
+window.addEventListener(
+  'load',
+  function( event ) {
+    var uls = document.getElementsByTagName( 'ul' );
+    var c, h, li, ul, button, cname;
+    for( var uli = 0; uli < uls.length; ++uli ) {
+      ul = uls[ uli ];
+      if(
+        ( ul.className == 'swatches' )
+        &&
+        ( ul.id in schemes )
+      ) {
+        for( var i = 0; i < colorset.length; ++i ) {
+          c = schemes[ ul.id ][ i ];
+          if( typeof c === 'string' ) {
+            c = channels( c );
+          }
+          h = hstring( c );
+          li = document.createElement( 'li' );
+          li.appendChild( document.createTextNode( h ) );
+          if( brightness( c ) < 0.5 ) {
+            li.style.color = '#FFFFFF';
+          }
+          else {
+            li.style.color = '#000000';
+          }
+          li.style.backgroundColor = h;
+          ul.appendChild( li );
+        }
+        li = document.createElement( 'li' );
+        button = document.createElement( 'input' );
+        button.setAttribute( 'type', 'button' );
+        button.setAttribute( 'value', ul.id );
+        button.onclick = function( name ) { return function( event ) {
+          set_syntax( name );
+        } }( ul.id );
+        li.appendChild( button );
+        ul.appendChild( li );
+      }
+    }
+    ul = document.getElementById( 'key' );
+    for( var i = 0; i < colorset.length; ++i ) {
+      li = document.createElement( 'li' );
+      li.appendChild( document.createTextNode( colorset[ i ] ) );
+      ul.appendChild( li );
+    }
+    ul = document.getElementById( 'map' );
+    var values = {};
+    for( var name in classmap ) {
+      values[ classmap[ name ] ] = name;
+    }
+    for( var i = 0; i < colorset.length; ++i ) {
+      cname = colorset[ i ];
+      li = document.createElement( 'li' );
+      if( cname in values ) {
+        li.appendChild( document.createTextNode( values[ cname ] ) );
+      }
+      else if( cname in [ 'foreground', 'background', 'cursor' ] ) {
+        li.appendChild( document.createTextNode( '{' + cname + '}' ) );
+      }
+      else {
+        li.appendChild( document.createTextNode( '(unmapped)' ) );
+      }
+      ul.appendChild( li );
+    }
+    set_syntax( 'ansi' );
+  }
+);
+  </script>
+</head>
+<body>
+  <ul id="key" class="swatches"></ul>
+  <ul id="ansi" class="swatches"></ul>
+  <ul id="desolarized" class="swatches"></ul>
+  <ul id="selene" class="swatches"></ul>
+  <ul id="map" class="swatches"></ul>
+  <pre><span class="Comment">#!/usr/bin/env python</span>
+<span class="Comment">#=============================================================================</span>
+<span class="Comment">#</span>
+<span class="Comment"># Shell Script</span>
+<span class="Comment">#</span>
+<span class="Comment">#=============================================================================</span>
+
+<span class="String">&quot;&quot;&quot;</span>
+<span class="String">Shell Script</span>
+<span class="String">============</span>
+<span class="String">&quot;&quot;&quot;</span>
+
+
+<span class="PreProc">import</span> sys
+
+
+__version__ <span class="Operator">=</span> <span class="String">'0.0.0'</span>
+
+
+<span class="Comment">#=============================================================================</span>
+<span class="Statement">def</span> <span class="Function">main</span><span class="Parens">(</span> argv <span class="Parens">)</span><span class="Operator">:</span>
+    <span class="String">&quot;&quot;&quot;</span>
+<span class="String">    Script execution entry point</span>
+
+<span class="String">    @param argv List of arguments passed to the script</span>
+<span class="String">    @return     Shell exit code (0 = success)</span>
+<span class="String">    &quot;&quot;&quot;</span>
+
+    <span class="Comment"># imports when using this as a script</span>
+    <span class="PreProc">import</span> argparse
+
+    <span class="Comment"># create and configure an argument parser</span>
+    parser <span class="Operator">=</span> argparse<span class="Operator">.</span><span class="Function">ArgumentParser</span><span class="Parens">(</span>
+        description <span class="Operator">=</span> <span class="String">'Shell Script'</span><span class="Operator">,</span>
+        add_help    <span class="Operator">=</span> <span class="Function">False</span>
+    <span class="Parens">)</span>
+    parser<span class="Operator">.</span><span class="Function">add_argument</span><span class="Parens">(</span>
+        <span class="String">'-h'</span><span class="Operator">,</span>
+        <span class="String">'--help'</span><span class="Operator">,</span>
+        default <span class="Operator">=</span> <span class="Function">False</span><span class="Operator">,</span>
+        <span class="Function">help</span>    <span class="Operator">=</span> <span class="String">'Display this help message and exit.'</span><span class="Operator">,</span>
+        action  <span class="Operator">=</span> <span class="String">'help'</span>
+    <span class="Parens">)</span>
+    parser<span class="Operator">.</span><span class="Function">add_argument</span><span class="Parens">(</span>
+        <span class="String">'-v'</span><span class="Operator">,</span>
+        <span class="String">'--version'</span><span class="Operator">,</span>
+        default <span class="Operator">=</span> <span class="Function">False</span><span class="Operator">,</span>
+        <span class="Function">help</span>    <span class="Operator">=</span> <span class="String">'Display script version and exit.'</span><span class="Operator">,</span>
+        action  <span class="Operator">=</span> <span class="String">'version'</span><span class="Operator">,</span>
+        version <span class="Operator">=</span> __version__
+    <span class="Parens">)</span>
+
+    <span class="Comment"># parse the arguments</span>
+    args <span class="Operator">=</span> parser<span class="Operator">.</span><span class="Function">parse_args</span><span class="Parens">(</span> argv<span class="Parens">[</span> <span class="Constant">1</span> <span class="Operator">:</span> <span class="Parens">]</span> <span class="Parens">)</span>
+
+    <span class="Comment"># check args.* for script execution here</span>
+    <span class="Function">print</span> <span class="String">'Template code executed.  Replace with real code.'</span>
+
+    <span class="Comment"># return success</span>
+    <span class="Statement">return</span> <span class="Constant">0</span>
+
+
+<span class="Comment">#=============================================================================</span>
+<span class="Statement">if</span> __name__ <span class="Operator">==</span> <span class="String">&quot;__main__&quot;</span><span class="Operator">:</span>
+    sys<span class="Operator">.</span><span class="Function">exit</span><span class="Parens">(</span> <span class="Function">main</span><span class="Parens">(</span> sys<span class="Operator">.</span>argv <span class="Parens">)</span> <span class="Parens">)</span></pre>
+</body>
+</html>

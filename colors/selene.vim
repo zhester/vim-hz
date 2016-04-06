@@ -23,20 +23,20 @@
 "    cursor             unique cursor
 "  0 black      #1C1C1C intended for UI feature backgrounds
 "  1 red                parens/brackets/braces
-"  2 green              comments
-"  3 yellow
-"  4 blue               types
+"  2 green              
+"  3 yellow             de-emphasized foreground
+"  4 blue               
 "  5 magenta            keywords
 "  6 cyan               string literals
 "  7 white      #A0A0A0 normal text foreground
 "  8 bblack     #2C2C2C intended for alternate backgrounds
-"  9 bred               operators
-" 10 bgreen
+"  9 bred               operators and punctuation
+" 10 bgreen             comments
 " 11 byellow
-" 12 bblue      #808080 mid-tone foreground (de-emphasized)
+" 12 bblue              types
 " 13 bmagenta           special characters
 " 14 bcyan              non-string literals
-" 15 bwhite     #FAFAFA highlighted foreground
+" 15 bwhite     #FAFAFA highlighted/special foreground
 "
 "=============================================================================
 
