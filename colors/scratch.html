@@ -13,9 +13,12 @@ body {
 }
 pre {
   clear: both;
-  margin: 0.5em 0;
+  margin: 1em 0 2em 0;
   font: 11pt/130% 'Input Mono', 'Source Code Pro', Consolas, monospace;
 }
+  pre span {
+    background-color: #FF00FF;
+  }
 .swatches {
   width: 8em;
   float: left;
@@ -30,33 +33,42 @@ pre {
   }
   </style>
   <script>
+//all configurable colors for a typical terminal
 colorset = [
-  'foreground', 'background', 'cursor',
+  'foreground', 'background', 'cursor', 'none',
   'black',      'red',        'green',  'yellow',
   'blue',       'magenta',    'cyan',   'white',
   'bblack',     'bred',       'bgreen', 'byellow',
   'bblue',      'bmagenta',   'bcyan',  'bwhite'
 ];
+//mapping syntax regions to colors: foreground, background, underline
 classmap = {
-  'Operator'  : 'bred',
-  'Function'  : 'bblue',
-  'Comment'   : 'bgreen',
-  'Constant'  : 'bcyan',
-  'Statement' : 'bwhite',
-  'PreProc'   : 'magenta',
-  'String'    : 'cyan',
-  'Parens'    : 'red'
+  'Comment'     : [ 'bgreen',   'none'  ],
+  'Constant'    : [ 'bcyan',    'none'  ],
+  'Error'       : [ 'red',      'white' ],
+  'Function'    : [ 'blue',     'none'  ],
+  'Identifier'  : [ 'white',    'none'  ],
+  'Operator'    : [ 'bred',     'none'  ],
+  'Parens'      : [ 'red',      'none'  ],
+  'PreProc'     : [ 'magenta',  'none'  ],
+  'Special'     : [ 'byellow',  'none'  ],
+  'SpecialKey'  : [ 'bmagenta', 'none'  ],
+  'Statement'   : [ 'bwhite',   'none'  ],
+  'String'      : [ 'cyan',     'none'  ],
+  'Title'       : [ 'bwhite',   'none'  ],
+  'Type'        : [ 'bblue',    'none'  ]
 };
+//lists of colors in each color scheme
 schemes = {
   'ansi' : [
-    [ 191, 191, 191 ], [   0,   0,   0 ], [ 191, 191, 191 ],
+    [ 191, 191, 191 ], [   0,   0,   0 ], [ 191, 191, 191 ], 'transparent',
     [   0,   0,   0 ], [ 191,   0,   0 ], [   0, 191,   0 ], [ 191, 191,   0 ],
     [   0,   0, 191 ], [ 191,   0, 191 ], [   0, 191, 191 ], [ 191, 191, 191 ],
     [  64,  64,  64 ], [ 255,  64,  64 ], [  64, 255,  64 ], [ 255, 255,  64 ],
     [  64,  64, 255 ], [ 255,  64, 255 ], [  64, 255, 255 ], [ 255, 255, 255 ]
   ],
   'desolarized' : [
-    [ 238, 238, 238 ], [   0,  22,  32 ], [ 181, 137,   0 ],
+    [ 238, 238, 238 ], [   0,  22,  32 ], [ 181, 137,   0 ], 'transparent',
     [   8,  38,  42 ], [ 220,  50,  47 ], [  52, 140,  40 ], [ 181, 137,   0 ],
     [  38, 139, 210 ], [ 211,  54, 130 ], [  42, 161, 152 ], [ 238, 238, 238 ],
     [   0,  22,  32 ], [ 203,  75,  22 ], [  88, 110, 117 ], [  20,  50,  64 ],
@@ -64,13 +76,14 @@ schemes = {
   ],
   'selene' : [
     //ZIH - work in progress
-    '#D0D0D0', '#0C0C0C', '#646400',
+    '#D0D0D0', '#0C0C0C', '#646400', 'transparent',
     [   0,   0,   0 ], '#CB4B16', [   0, 191,   0 ], [ 191, 191,   0 ],
     [   0,   0, 191 ], [ 191,   0, 191 ], [   0, 191, 191 ], [ 191, 191, 191 ],
     [   8,  38,  42 ], [ 220,  50,  47 ], [  52, 140,  40 ], [ 181, 137,   0 ],
     [  38, 139, 210 ], [ 211,  54, 130 ], [  42, 161, 152 ], [ 238, 238, 238 ]
   ]
 };
+//compute perceived brightness of a color
 function brightness( color ) {
   var rp = color[ 0 ] / 255;
   var gp = color[ 1 ] / 255;
@@ -81,18 +94,21 @@ function brightness( color ) {
     + ( bp * bp * 0.114 )
   );
 }
+//compute HSL lightness of a color
 function lightness( color ) {
   var rp = color[ 0 ] / 255;
   var gp = color[ 1 ] / 255;
   var bp = color[ 2 ] / 255;
   return ( Math.max( rp, gp, bp ) + Math.min( rp, gp, bp ) ) / 2;
 }
+//produce hex string of a color from a 3-channel color
 function hstring( color ) {
   var r = ( '00' + color[ 0 ].toString( 16 ).toUpperCase() ).slice( -2 );
   var g = ( '00' + color[ 1 ].toString( 16 ).toUpperCase() ).slice( -2 );
   var b = ( '00' + color[ 2 ].toString( 16 ).toUpperCase() ).slice( -2 );
   return '#' + r + g + b;
 }
+//produce a 3-channel color from a hex string
 function channels( colorstr ) {
   if( colorstr[ 0 ] == '#' ) {
     colorstr = colorstr.slice( 1 );
@@ -102,6 +118,7 @@ function channels( colorstr ) {
   var b = colorstr.slice( 4, 6 );
   return [ parseInt( r, 16 ), parseInt( g, 16 ), parseInt( b, 16 ) ];
 }
+//add a rule to the given style sheet
 function add_rule( sheet, selector, styles ) {
   var pairs = [], attribute;
   for( var prop in styles ) {
@@ -114,6 +131,7 @@ function add_rule( sheet, selector, styles ) {
   var rule = selector + ' { ' + pairs.join( "\n" ) + ' }';
   sheet.insertRule( rule, sheet.cssRules.length );
 }
+//changes the syntax highlighting by building a new style sheet
 function set_syntax( name ) {
   var elem = document.getElementById( 'current_style' );
   if( elem != null ) {
@@ -125,7 +143,7 @@ function set_syntax( name ) {
   var sheet = elem.sheet;
   if( name in schemes ) {
     var s = schemes[ name ];
-    var color;
+    var parts, value;
     add_rule(
       sheet,
       'pre',
@@ -134,14 +152,26 @@ function set_syntax( name ) {
         'background-color' : s[ colorset.indexOf( 'background' ) ]
       }
     );
-    color = s[ colorset.indexOf( 'background' ) ];
-    add_rule( sheet, '' + classname, { 'background-color' : color } );
+    value = s[ colorset.indexOf( 'background' ) ];
+    add_rule( sheet, '' + classname, { 'background-color' : value } );
     for( var classname in classmap ) {
-      color = s[ colorset.indexOf( classmap[ classname ] ) ];
-      add_rule( sheet, '.' + classname, { 'color' : color } );
+      parts = classmap[ classname ];
+      if( ( parts.length > 0 ) && ( parts[ 0 ].length > 0 ) ) {
+        value = s[ colorset.indexOf( classmap[ classname ][ 0 ] ) ];
+        add_rule( sheet, '.' + classname, { 'color' : value } );
+      }
+      if( ( parts.length > 1 ) && ( parts[ 1 ].length > 0 ) ) {
+        value = s[ colorset.indexOf( classmap[ classname ][ 1 ] ) ];
+        add_rule( sheet, '.' + classname, { 'background-color' : value } );
+      }
+      if( ( parts.length > 2 ) && ( parts[ 2 ].length > 0 ) ) {
+        value = s[ colorset.indexOf( classmap[ classname ][ 2 ] ) ];
+        add_rule( sheet, '.' + classname, { 'text-decoration' : value } );
+      }
     }
   }
 }
+//script startup
 window.addEventListener(
   'load',
   function( event ) {
@@ -156,10 +186,16 @@ window.addEventListener(
       ) {
         for( var i = 0; i < colorset.length; ++i ) {
           c = schemes[ ul.id ][ i ];
-          if( typeof c === 'string' ) {
-            c = channels( c );
+          if( c == 'transparent' ) {
+            h = 'transparent';
           }
-          h = hstring( c );
+          else if( typeof c === 'string' ) {
+            c = channels( c );
+            h = hstring( c );
+          }
+          else {
+            h = hstring( c );
+          }
           li = document.createElement( 'li' );
           li.appendChild( document.createTextNode( h ) );
           if( brightness( c ) < 0.5 ) {
@@ -189,9 +225,15 @@ window.addEventListener(
       ul.appendChild( li );
     }
     ul = document.getElementById( 'map' );
-    var values = {};
+    var values = {}, vkey;
     for( var name in classmap ) {
-      values[ classmap[ name ] ] = name;
+      vkey = classmap[ name ][ 0 ];
+      if( vkey in values ) {
+        values[ vkey ] += ',' + name;
+      }
+      else {
+        values[ vkey ] = name;
+      }
     }
     for( var i = 0; i < colorset.length; ++i ) {
       cname = colorset[ i ];
@@ -218,6 +260,13 @@ window.addEventListener(
   <ul id="desolarized" class="swatches"></ul>
   <ul id="selene" class="swatches"></ul>
   <ul id="map" class="swatches"></ul>
+
+
+  <!-- ZIH - add these:
+       PHP, JavaScript, SQL, CSS, VimScript, Bourne, LSDIRS, shell prompt
+  -->
+
+
   <pre><span class="Comment">#!/usr/bin/env python</span>
 <span class="Comment">#=============================================================================</span>
 <span class="Comment">#</span>
@@ -240,7 +289,8 @@ __version__ <span class="Operator">=</span> <span class="String">'0.0.0'</span>
 <span class="Comment">#=============================================================================</span>
 <span class="Statement">def</span> <span class="Function">main</span><span class="Parens">(</span> argv <span class="Parens">)</span><span class="Operator">:</span>
     <span class="String">&quot;&quot;&quot;</span>
-<span class="String">    Script execution entry point</span>
+<span class="String">    Script execution entry point</span><span
+class="SpecialKey">····</span>
 
 <span class="String">    @param argv List of arguments passed to the script</span>
 <span class="String">    @return     Shell exit code (0 = success)</span>
@@ -283,5 +333,70 @@ __version__ <span class="Operator">=</span> <span class="String">'0.0.0'</span>
 <span class="Comment">#=============================================================================</span>
 <span class="Statement">if</span> __name__ <span class="Operator">==</span> <span class="String">&quot;__main__&quot;</span><span class="Operator">:</span>
     sys<span class="Operator">.</span><span class="Function">exit</span><span class="Parens">(</span> <span class="Function">main</span><span class="Parens">(</span> sys<span class="Operator">.</span>argv <span class="Parens">)</span> <span class="Parens">)</span></pre>
+
+
+
+
+<pre><span class="PreProc">#include </span><span class="String">&lt;stdio.h&gt;</span>
+<span class="PreProc">#include </span><span class="String">&lt;stdlib.h&gt;</span>
+
+<span class="Comment">/*</span><span class="Comment">==========================================================================</span><span class="Comment">*/</span>
+<span class="Type">int</span> <span class="Function">main</span><span class="Parens">(</span>                               <span class="Comment">/*</span><span class="Comment"> program entry point              </span><span class="Comment">*/</span>
+    <span class="Type">int</span>                 argc<span class="Operator">,</span>           <span class="Comment">/*</span><span class="Comment"> number of arguments              </span><span class="Comment">*/</span>
+    <span class="Type">const</span> <span class="Type">char</span><span class="Operator">**</span>        argv            <span class="Comment">/*</span><span class="Comment"> list of arguments                </span><span class="Comment">*/</span>
+<span class="Parens">)</span> <span class="Parens">{</span>                                     <span class="Comment">/*</span><span class="Comment"> return program exist status      </span><span class="Comment">*/</span>
+
+    <span class="Comment">/*</span><span class="Comment">------------------------------------------------------------------------</span>
+<span class="Comment">    Some constant.</span>
+<span class="Comment">    ------------------------------------------------------------------------</span><span class="Comment">*/</span>
+<span class="PreProc">    #define </span><span class="Function">CONSTANT </span><span class="Parens">(</span><span class="PreProc"> </span><span class="Constant">0xFCA08000</span><span class="PreProc"> </span><span class="Parens">)</span>
+
+    <span class="Comment">/*</span><span class="Comment">------------------------------------------------------------------------</span>
+<span class="Comment">    Some variable.</span>
+<span class="Comment">    ------------------------------------------------------------------------</span><span class="Comment">*/</span>
+    <span class="Type">int</span>                 variable<span class="Operator">;</span>
+
+    <span class="Comment">/*</span><span class="Comment">------------------------------------------------------------------------</span>
+<span class="Comment">    Variable is not in use.</span>
+<span class="Comment">    ------------------------------------------------------------------------</span><span class="Comment">*/</span>
+    <span class="Parens">(</span> <span class="Type">void</span> <span class="Parens">)</span> variable<span class="Operator">;</span>
+
+    <span class="Comment">/*</span><span class="Comment">------------------------------------------------------------------------</span>
+<span class="Comment">    Some strange code.</span>
+<span class="Comment">    ------------------------------------------------------------------------</span><span class="Comment">*/</span>
+    <span class="Statement">if</span><span class="Parens">(</span> <span class="Constant">FALSE</span> <span class="Parens">)</span> <span class="Parens">{</span>
+        <span class="Function">printf</span><span class="Parens">(</span> <span class="String">&quot;FALSE was TRUE!?</span><span class="Special">\n</span><span class="String">&quot;</span> <span class="Parens">)</span><span class="Operator">;</span>
+    <span class="Parens">}</span>
+
+    <span class="Comment">/*</span><span class="Comment">------------------------------------------------------------------------</span>
+<span class="Comment">    Print something.</span>
+<span class="Comment">    ------------------------------------------------------------------------</span><span class="Comment">*/</span>
+    <span class="Function">printf</span><span class="Parens">(</span> <span class="String">&quot;Hello World</span><span class="Special">\n</span><span class="String">&quot;</span> <span class="Parens">)</span><span class="Operator">;</span>
+
+    <span class="Comment">/*</span><span class="Comment">------------------------------------------------------------------------</span>
+<span class="Comment">    Return to shell.</span>
+<span class="Comment">    ------------------------------------------------------------------------</span><span class="Comment">*/</span>
+    <span class="Statement">return</span> <span class="Constant">EXIT_SUCCESS</span><span class="Operator">;</span>
+<span class="Parens">}</span></pre>
+
+
+
+
+<pre><span class="Comment">&lt;!doctype html&gt;</span>
+<span class="Function">&lt;</span><span class="Statement">html</span><span class="Function"> </span><span class="Type">lang</span><span class="Function">=</span><span class="String">&quot;en&quot;</span><span class="Function">&gt;</span>
+<span class="Function">&lt;</span><span class="Statement">head</span><span class="Function">&gt;</span>
+<span class="PreProc">  </span><span class="Function">&lt;</span><span class="Statement">meta</span><span class="Function"> </span><span class="Type">charset</span><span class="Function">=</span><span class="String">&quot;utf-8&quot;</span><span class="Function">&gt;</span>
+<span class="PreProc">  </span><span class="Function">&lt;</span><span class="Statement">title</span><span class="Function">&gt;</span><span class="Title">Title</span><span class="Identifier">&lt;/</span><span class="Statement">title</span><span class="Identifier">&gt;</span>
+<span class="PreProc">  </span><span class="Function">&lt;</span><span class="Statement">link</span><span class="Function"> </span><span class="Type">rel</span><span class="Function">=</span><span class="String">&quot;stylesheet&quot;</span><span class="Function"> </span><span class="Type">href</span><span class="Function">=</span><span class="String">&quot;styles.css&quot;</span><span class="Function">&gt;</span>
+<span class="PreProc">  </span><span class="Function">&lt;</span><span class="Statement">script</span><span class="Function"> </span><span class="Type">src</span><span class="Function">=</span><span class="String">&quot;script.js&quot;</span><span class="Function">&gt;</span><span class="Identifier">&lt;/</span><span class="Statement">script</span><span class="Identifier">&gt;</span>
+<span class="Identifier">&lt;/</span><span class="Statement">head</span><span class="Identifier">&gt;</span>
+<span class="Function">&lt;</span><span class="Statement">body</span><span class="Function">&gt;</span>
+  <span class="Function">&lt;</span><span class="Statement">h1</span><span class="Function">&gt;</span><span class="Title">Some HTML Document</span><span class="Identifier">&lt;/</span><span class="Statement">h1</span><span class="Identifier">&gt;</span>
+  <span class="Function">&lt;</span><span class="Statement">p</span><span class="Function">&gt;</span>Content <span class="Special">&amp;amp;</span> things <span class="Error">&gt;</span> stuff.<span class="Identifier">&lt;/</span><span class="Statement">p</span><span class="Identifier">&gt;</span>
+<span class="Identifier">&lt;/</span><span class="Statement">body</span><span class="Identifier">&gt;</span>
+<span class="Identifier">&lt;/</span><span class="Statement">html</span><span class="Identifier">&gt;</span></pre>
+
+
+
 </body>
 </html>
