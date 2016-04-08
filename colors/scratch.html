@@ -44,19 +44,19 @@ colorset = [
 //mapping syntax regions to colors: foreground, background, underline
 classmap = {
   'Comment'     : [ 'bgreen',   'none'  ],
-  'Constant'    : [ 'bcyan',    'none'  ],
+  'Constant'    : [ 'byellow',  'none'  ],
   'Error'       : [ 'red',      'white' ],
-  'Function'    : [ 'blue',     'none'  ],
+  'Function'    : [ 'bblue',    'none'  ],
   'Identifier'  : [ 'white',    'none'  ],
   'Operator'    : [ 'bred',     'none'  ],
   'Parens'      : [ 'red',      'none'  ],
   'PreProc'     : [ 'magenta',  'none'  ],
-  'Special'     : [ 'byellow',  'none'  ],
+  'Special'     : [ 'yellow',   'none'  ],
   'SpecialKey'  : [ 'bmagenta', 'none'  ],
-  'Statement'   : [ 'bwhite',   'none'  ],
+  'Statement'   : [ 'bcyan',    'none'  ],
   'String'      : [ 'cyan',     'none'  ],
   'Title'       : [ 'bwhite',   'none'  ],
-  'Type'        : [ 'bblue',    'none'  ]
+  'Type'        : [ 'blue',     'none'  ]
 };
 //lists of colors in each color scheme
 schemes = {
@@ -76,11 +76,19 @@ schemes = {
   ],
   'selene' : [
     //ZIH - work in progress
-    '#D0D0D0', '#0C0C0C', '#646400', 'transparent',
-    [   0,   0,   0 ], '#CB4B16', [   0, 191,   0 ], [ 191, 191,   0 ],
-    [   0,   0, 191 ], [ 191,   0, 191 ], [   0, 191, 191 ], [ 191, 191, 191 ],
-    [   8,  38,  42 ], [ 220,  50,  47 ], [  52, 140,  40 ], [ 181, 137,   0 ],
-    [  38, 139, 210 ], [ 211,  54, 130 ], [  42, 161, 152 ], [ 238, 238, 238 ]
+    // strings/cyan are too dark
+    // preprocs/magenta are too light
+    // types/blue are not distinct enough from functions/bblue
+    // whites and blacks are untested for UI features
+    // cursor is untested
+    // green should be set for variety
+    // - CONSIDER a new 60deg hue rotation based on orange (at red)
+    // - this is a mess right now
+    '#C4C4C4', '#0C0C0C', '#348C28', 'transparent',
+    '#181818', '#CB4B16', '#348C28', '#CB9016',
+    '#1C3B88', '#4B198A', '#0F8A59', '#E0E0E0',
+    '#2C2C2C', '#B61F1B', '#348C28', '#B58900',
+    '#268BD2', '#D33682', '#2AA198', '#FFFFFF'
   ]
 };
 //compute perceived brightness of a color
@@ -94,12 +102,120 @@ function brightness( color ) {
     + ( bp * bp * 0.114 )
   );
 }
+//computes hue of a color
+function hue( color ) {
+  var rp = color[ 0 ] / 255;
+  var gp = color[ 1 ] / 255;
+  var bp = color[ 2 ] / 255;
+  var cmax = Math.max( rp, gp, bp );
+  var cmin = Math.min( rp, gp, bp );
+  var cdelta = cmax - cmin;
+  if( cdelta == 0 ) {
+    return 0.0;
+  }
+  else if( cmax == rp ) {
+    return 60.0 * ( ( ( gp - bp ) / cdelta ) % 6 );
+  }
+  else if( cmax == rp ) {
+    return 60.0 * ( ( ( bp - rp ) / cdelta ) + 2 );
+  }
+  else {
+    return 60.0 * ( ( ( rp - gp ) / cdelta ) + 4 );
+  }
+}
 //compute HSL lightness of a color
 function lightness( color ) {
   var rp = color[ 0 ] / 255;
   var gp = color[ 1 ] / 255;
   var bp = color[ 2 ] / 255;
   return ( Math.max( rp, gp, bp ) + Math.min( rp, gp, bp ) ) / 2;
+}
+//HSL to RGB converter
+function hsl2rgb( color ) {
+  var rp, gp, bp, h, s, l;
+  [ h, s, l ] = color;
+  var c = ( 1 - Math.abs( ( 2.0 * l ) - 1.0 ) ) * s;
+  var x = c * ( 1 - Math.abs( ( ( h / 60.0 ) % 2 ) - 1.0 ) );
+  var m = l - ( c / 2.0 );
+  if( h < 60.0 ) {
+    [ rp, gp, bp ] = [ c, x, 0.0 ];
+  }
+  else if( h < 120.0 ) {
+    [ rp, gp, bp ] = [ x, c, 0.0 ];
+  }
+  else if( h < 180.0 ) {
+    [ rp, gp, bp ] = [ 0.0, c, x ];
+  }
+  else if( h < 240.0 ) {
+    [ rp, gp, bp ] = [ 0.0, x, c ];
+  }
+  else if( h < 300.0 ) {
+    [ rp, gp, bp ] = [ x, 0.0, c ];
+  }
+  else {
+    [ rp, gp, bp ] = [ c, 0.0, x ];
+  }
+  return [
+    ( ( rp + m ) * 255 ) | 0,
+    ( ( gp + m ) * 255 ) | 0,
+    ( ( bp + m ) * 255 ) | 0
+  ];
+}
+//RGB to HSB converter
+function rgb2hsb( color ) {
+  var h, s, b;
+  var rp = color[ 0 ] / 255;
+  var gp = color[ 1 ] / 255;
+  var bp = color[ 2 ] / 255;
+  var cmax = Math.max( rp, gp, bp );
+  var cmin = Math.min( rp, gp, bp );
+  var cdelta = cmax - cmin;
+  if( cdelta == 0.0 ) {
+    h = 0.0;
+  }
+  else if( cmax == rp ) {
+    h = 60.0 * ( ( ( gp - bp ) / cdelta ) % 6 );
+  }
+  else if( cmax == gp ) {
+    h = 60.0 * ( ( ( bp - rp ) / cdelta ) + 2 );
+  }
+  else {
+    h = 60.0 * ( ( ( rp - gp ) / cdelta ) + 4 );
+  }
+  if( cmax == 0.0 ) {
+    b = 0.0;
+    s = 0.0;
+  }
+  else {
+    b = cmax;
+    s = cdelta / b;
+  }
+  return [ h, s, b ];
+}
+//RGB to HSL converter
+function rgb2hsl( color ) {
+  var h, s, l;
+  var rp = color[ 0 ] / 255;
+  var gp = color[ 1 ] / 255;
+  var bp = color[ 2 ] / 255;
+  var cmax = Math.max( rp, gp, bp );
+  var cmin = Math.min( rp, gp, bp );
+  var cdelta = cmax - cmin;
+  if( cdelta == 0.0 ) {
+    h = 0.0;
+  }
+  else if( cmax == rp ) {
+    h = 60.0 * ( ( ( gp - bp ) / cdelta ) % 6 );
+  }
+  else if( cmax == gp ) {
+    h = 60.0 * ( ( ( bp - rp ) / cdelta ) + 2 );
+  }
+  else {
+    h = 60.0 * ( ( ( rp - gp ) / cdelta ) + 4 );
+  }
+  l = ( cmax + cmin ) / 2.0;
+  s = 1.0 - Math.abs( ( 2.0 * l ) - 1.0 );
+  return [ h, s, l ];
 }
 //produce hex string of a color from a 3-channel color
 function hstring( color ) {
@@ -249,7 +365,7 @@ window.addEventListener(
       }
       ul.appendChild( li );
     }
-    set_syntax( 'ansi' );
+    set_syntax( 'selene' );
   }
 );
   </script>
