@@ -1024,6 +1024,28 @@ snippet uni
 # Source Code Templates
 #=============================================================================
 
+# Minimal Common Entry-point Starter
+snippet main
+	#=============================================================================
+	def main( argv ):
+	    """
+	    Script execution entry point
+	
+	    @param argv List of arguments passed to the script
+	    @return     Shell exit code (0 = success)
+	    """
+	
+	    # Return success.
+	    return 0
+	
+	
+	#=============================================================================
+	if __name__ == "__main__":
+	    import sys
+	    sys.exit( main( sys.argv ) )
+	
+# end of snippet
+
 # Generic Shell Script
 snippet shell
 	#!/usr/bin/env python
@@ -1086,143 +1108,6 @@ snippet shell
 	
 	    # return success
 	    return 0
-	
-	
-	#=============================================================================
-	if __name__ == "__main__":
-	    sys.exit( main( sys.argv ) )
-	
-# end of snippet
-
-# New Module with Built-in Unit Tests
-snippet module
-	#!/usr/bin/env python
-	#=============================================================================
-	#
-	# ${1:A Module}
-	#
-	#=============================================================================
-	
-	"""
-	$1
-	========
-	"""
-	
-	
-	import os
-	import sys
-	
-	
-	__version__ = '0.0.0'
-	
-	
-	#=============================================================================
-	def _test():
-	    """
-	    Executes all module test functions.
-	
-	    @return True if all tests pass, false if one fails.
-	    """
-	
-	    # imports for testing only
-	    import inspect
-	
-	    # set up a simple logging facility to capture or print test output
-	    class TestError( RuntimeError ):
-	        pass
-	    class TestLogger( object ):
-	        def fail( self, message ):
-	            caller = inspect.getframeinfo( inspect.stack()[ 1 ][ 0 ] )
-	            output = '## FAILED {}: {} ##'.format( caller.lineno, message )
-	            self.put( output )
-	            raise TestError( output )
-	        def put( self, message ):
-	            sys.stdout.write( '{}\n'.format( message ) )
-	    log = TestLogger()
-	
-	    # list of all module members
-	    members = globals().copy()
-	    members.update( locals() )
-	
-	    # iterate through module members
-	    for member in members:
-	
-	        # check members for test functions
-	        if ( member[ : 6 ] == '_test_' ) and ( callable( members[ member ] ) ):
-	
-	            # execute the test
-	            try:
-	                members[ member ]( log )
-	
-	            # catch any errors in the test
-	            except TestError:
-	
-	                # return failure to the user
-	                return False
-	
-	    # if no test fails, send a helpful message
-	    log.put( '!! PASSED !!' )
-	
-	    # return success to the user
-	    return True
-	
-	
-	#=============================================================================
-	def main( argv ):
-	    """
-	    Script execution entry point
-	    @param argv List of arguments passed to the script
-	    @return     Shell exit code (0 = success)
-	    """
-	
-	    # imports when using this as a script
-	    import argparse
-	
-	    # create and configure an argument parser
-	    parser = argparse.ArgumentParser(
-	        description = '$1',
-	        add_help    = False
-	    )
-	    parser.add_argument(
-	        '-h',
-	        '--help',
-	        default = False,
-	        help    = 'Display this help message and exit.',
-	        action  = 'help'
-	    )
-	    parser.add_argument(
-	        '-v',
-	        '--version',
-	        default = False,
-	        help    = 'Display script version and exit.',
-	        action  = 'version',
-	        version = __version__
-	    )
-	    parser.add_argument(
-	        '-t',
-	        '--test',
-	        default = False,
-	        help    = 'Execute built-in unit tests.',
-	        action  = 'store_true'
-	    )
-	
-	    # parse the arguments
-	    args = parser.parse_args( argv[ 1 : ] )
-	
-	    # user requests built-in unit tests
-	    if args.test != False:
-	        result = _test()
-	        if result == False:
-	            return os.EX_SOFTWARE
-	        return os.EX_OK
-	
-	    # check args.* for script execution here
-	    else:
-	        print 'Module executed as script.'
-	        return os.EX_USAGE
-	
-	    # return success
-	    return os.EX_OK
 	
 	
 	#=============================================================================
