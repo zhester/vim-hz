@@ -88,6 +88,9 @@ vnoremap <silent> <Leader>h :'<,'>D2H<CR>
 nnoremap <silent> <Leader>H :H2D<CR>
 vnoremap <silent> <Leader>H :'<,'>H2D<CR>
 
+" Split the current line opposite the default join operation.
+nnoremap <silent> <Leader>j :call code#SplitLine()<CR>
+
 " Normalize quick-entry comments into nice-looking block comments.
 nnoremap <silent> <Leader>m :call code#CommentBlock()<CR>
 nnoremap <silent> <Leader>M :call code#CommentBlock( line( '.' ), 70 )<CR>
@@ -101,6 +104,9 @@ nnoremap <silent> <Leader>N :call display#ToggleRelativeNumber()<CR>
 " Trim trailing white sapce.
 nnoremap <silent> <Leader>r :%s/\s\+$//ge<CR>
 vnoremap <silent> <Leader>r <C-c>:%s/\%V\s\+$//ge<CR>
+
+" Display syntax match groups.
+nnoremap <silent> <Leader>z :echo dev#GetSyntax()<CR>
 
 "-----------------------------------------------------------------------------
 " Automation
