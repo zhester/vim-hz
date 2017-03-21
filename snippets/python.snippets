@@ -8,6 +8,11 @@
 # Structural Comments
 #=============================================================================
 
+# Grep-able Note to Self
+snippet zih
+	### ZIH TODO: ${1}
+# end of snippet
+
 # Separator Bars
 snippet b0
 	#=============================================================================
@@ -102,45 +107,6 @@ snippet classargs
 	        """
 	        super( $1, self ).__init__( *args, **kwargs )
 	
-snippet dict
-	#=============================================================================
-	class ${1:name}( dict ):
-	    """
-	    ${2:description}
-	    """
-	
-	
-	    #=========================================================================
-	    def __init__( self, *args, **kwargs ):
-	        """
-	        Initializes a $1 dictionary object.
-	        """
-	        super( $1, self ).__init__( *args, **kwargs )
-	
-	
-	    #=========================================================================
-	    def __delitem__( self, key ):
-	        """"
-	        Implements index notation for deleting items from the dictionary.
-	        """"
-	        super( $1, self ).__delitem__( key )
-	
-	
-	    #=========================================================================
-	    def __getitem__( self, key ):
-	        """"
-	        Implements index notation for getting items from the dictionary.
-	        """"
-	        return super( $1, self ).__getitem__( key )
-	
-	
-	    #=========================================================================
-	    def __setitem__( self, key, value ):
-	        """"
-	        Implements index notation for setting items in the dictionary.
-	        """"
-	        super( $1, self ).__setitem__( key, value )
-	
 snippet error
 	#=============================================================================
 	class ${1:ModuleError}( ${3:RuntimeError} ):
@@ -151,43 +117,134 @@ snippet error
 # end of snippet
 
 
+#=============================================================================
+# Stuff for Working With PyQt5
+#=============================================================================
+
+# Instant demo program
+
+# Extending a widget
+snippet widget
+	#=============================================================================
+	class ${1:name}( qt.QWidget ):
+	    """
+	    ${2:description}
+	    """
+	
+	
+	    #=========================================================================
+	    def __init__( self, *args ):
+	        """
+	        Initializes a $1 widget.
+	        """
+	        super().__init__( *args )
+	
+# Layouts
+snippet qgrid
+	layout = qt.QGridLayout( self )
+	layout.setSpacing( 0 )
+	layout.setContentsMargins( 0, 0, 0, 0 )
+snippet qvbox
+	layout = qt.QVBoxLayout( self )
+	layout.setSpacing( 0 )
+	layout.setContentsMargins( 0, 0, 0, 0 )
+snippet qhbox
+	layout = qt.QHBoxLayout( self )
+	layout.setSpacing( 0 )
+	layout.setContentsMargins( 0, 0, 0, 0 )
+# end of snippet
+
+# Instant PyQt5 Demo Program
+	#!/usr/bin/env python3
+	#=============================================================================
+	#
+	# Instant Demo Program
+	#
+	#=============================================================================
+	
+	"""
+	Instant Demo Program
+	====================
+	"""
+	
+	
+	import sys
+	
+	import PyQt5.QtWidgets as qt
+	
+	
+	#=============================================================================
+	class Demo( qt.QWidget ):
+	    """
+	    Demonstration
+	    """
+	
+	
+	    #=========================================================================
+	    def __init__( self, *args ):
+	        """
+	        Initializes a Demonstration widget.
+	        """
+	
+	        # Window Setup
+	        super().__init__( *args )
+	        self.setWindowTitle( 'Demo' )
+	        self.setStyleSheet( '''
+	            QWidget {
+	                color: #E0E0E0;
+	                background-color: #303030;
+	            }
+	        ''' )
+	
+	        # Layout Setup
+	        layout = qt.QGridLayout( self )
+	        layout.setSpacing( 0 )
+	        layout.setContentsMargins( 10, 10, 10, 10 )
+	
+	        # Widget Population
+	        button = qt.QPushButton( 'Hello', self )
+	        button.clicked.connect( self._handle_button )
+	        layout.addWidget( button, 0, 0 )
+	
+	
+	    #=========================================================================
+	    def _handle_button( self, event ):
+	        """
+	        Handles button clicks.
+	        """
+	        print( 'Clicked!' )
+	
+	
+	#=============================================================================
+	def main( argv ):
+	    """
+	    Script execution entry point
+	
+	    @param argv List of arguments passed to the script
+	    @return     Shell exit code (0 = success)
+	    """
+	
+	    # Qt Application
+	    app = qt.QApplication( argv )
+	
+	    # Application Window
+	    w = Demo()
+	    w.show()
+	
+	    # Application Loop
+	    return app.exec_()
+	
+	
+	#=============================================================================
+	if __name__ == "__main__":
+	    sys.exit( main( sys.argv ) )
+	
+# end of snippet
+
+
 #-----------------------------------------------------------------------------
 # Python Protocol Templates
 #-----------------------------------------------------------------------------
-
-# Iterator Method Group
-snippet iter
-	    #=========================================================================
-	    def __iter__( self ):
-	        """
-	        Declare iterator support.
-	
-	        @return The iterable object for this instance
-	        """
-	        return self
-	
-	
-	    #=========================================================================
-	    def __next__( self ):
-	        """
-	        Retrieves the next value in the sequence.
-	
-	        @return The next value in the sequence
-	        @throws StopIteration when there are no more items in sequence
-	        """
-	        raise StopIteration()
-	
-	
-	    #=========================================================================
-	    def next( self ):
-	        """
-	        Retrieves the next value in the sequence (Python 2 support).
-	
-	        @return The next value in the sequence
-	        """
-	        return self.__next__()
-	
-# end of snippet
 
 # Descriptor Template
 snippet descriptor
@@ -256,258 +313,6 @@ snippet descriptor
 	                'Unable to set unknown property "{}".'.format( self._name )
 	            )
 	        setattr( obj, self._name )
-	
-# end of snippet
-
-# File I/O Stream Emulation
-snippet streams
-	#=============================================================================
-	class ${1:GetDescriptor}( object ):
-	    """
-	    Implements a descriptor to enforce read-only, state-style attributes.
-	    """
-	
-	    #=========================================================================
-	    def __init__( self, name, doc = '' ):
-	        """
-	        Initializes a $1 object.
-	        """
-	        self._name   = name
-	        self.__doc__ = doc
-	
-	
-	    #=========================================================================
-	    def __get__( self, obj, objtype = None ):
-	        """
-	        Retrieves the state of this attribute.
-	        """
-	        if obj is None:
-	            return self
-	        return getattr( obj, self._name )
-	
-	
-	#=============================================================================
-	class ${2:BaseStream}( object ):
-	    """
-	    Implements attributes common to both input and output stream objects.
-	
-	    Dependencies
-	
-	        import os
-	        class $1
-	    """
-	
-	    #=========================================================================
-	    # public properties
-	
-	    # stream closed state
-	    _closed = True
-	    closed = $1( '_closed', 'Stream closed state (bool)' )
-	
-	    # string encoding used by this stream
-	    _encoding = None
-	    encoding = $1( '_encoding', 'Stream string encoding.' )
-	
-	    # the unicode error handler used along with the encoding
-	    errors = None
-	
-	    # current mode of the stream
-	    _mode = 'r'
-	    mode = $1( '_mode', 'File I/O mode.' )
-	
-	    # named representation of the stream (e.g. file name)
-	    _name = ''
-	    name = $1( '_name', 'Named representation of the stream.' )
-	
-	    # allow the built-in \`print\` implementation to keep state in stream
-	    softspace = 0
-	
-	
-	    #=========================================================================
-	    def __init__( self ):
-	        """
-	        Initializes a $2 object.
-	        """
-	        super( $2, self ).__init__()
-	
-	
-	    #=========================================================================
-	    def close( self ):
-	        """
-	        Closes the file-like stream.
-	        """
-	        self._closed = True
-	
-	
-	    #=========================================================================
-	    def flush( self ):
-	        """
-	        Flushes the internal buffer.
-	        """
-	        pass
-	
-	
-	    #=========================================================================
-	    # Do not implement if the object does not have a real file descriptor.
-	    #def fileno( self ):
-	    #    """
-	    #    Returns the integer file descriptor.
-	    #    """
-	    #    pass
-	
-	
-	    #=========================================================================
-	    # Do not implement if the object is not using a real file.
-	    #def isatty( self ):
-	    #    """
-	    #    Tests the stream to determine if it is a TTY (or similar) device.
-	    #    """
-	    #    pass
-	
-	
-	    #=========================================================================
-	    def seek( self, offset, whence = os.SEEK_SET ):
-	        """
-	        Moves the stream's internal position to a new offset.
-	
-	        @param offset The new offset
-	        @param whence The reference point of the new offset.  One of:
-	                      os.SEEK_SET (0): relative the start of the stream
-	                      os.SEEK_CUR (1): relative the current position
-	                      os.SEEK_END (2): relative the end of the stream
-	        """
-	        pass
-	
-	
-	    #=========================================================================
-	    def tell( self ):
-	        """
-	        Returns the current position in the stream.
-	        """
-	        return 0
-	
-	
-	#=============================================================================
-	class ${3:InputStream}( $2 ):
-	    """
-	    Emulates a file-like stream for reading data.
-	
-	    Dependencies
-	
-	        import os
-	        class $1
-	        class $2
-	    """
-	
-	    #=========================================================================
-	    # public properties
-	
-	    # newline style or list of styles encountered in stream
-	    _newlines = None
-	    newlines = $1( '_newlines', 'Newlines in stream.' )
-	
-	
-	    #=========================================================================
-	    def __init__( self ):
-	        """
-	        Initializes an $3 object.
-	        """
-	        super( $3, self ).__init__()
-	
-	
-	    #=========================================================================
-	    def next( self ):
-	        """
-	        Returns the next element from the stream.
-	        """
-	        if True:
-	            raise StopIteration()
-	
-	
-	    #=========================================================================
-	    def read( self, size = 0 ):
-	        """
-	        Reads data from the stream.
-	
-	        @param size Limit the maximum number of bytes to return
-	        @return     Stream data as a string
-	        """
-	        has_reached_eof = True
-	        if has_reached_eof == True:
-	            return ''
-	        if size > 0:
-	            return 'a specified number of bytes from the stream'[ : size ]
-	        return 'remaining data in stream'
-	
-	
-	    #=========================================================================
-	    def readline( self, size = 0 ):
-	        """
-	        Reads the next line from the stream.
-	        If the line is complete, the trailing line terminator is included.
-	
-	        @param size Limit the maximum number of bytes to return
-	        @return     The next line from the stream
-	        """
-	        return '\n'
-	
-	
-	    #=========================================================================
-	    def readlines( self, sizehint = 0 ):
-	        """
-	        Reads all remaining lines from the stream.
-	
-	        @param sizehint Limit the approximate bytes read from the stream
-	        return          A list of all remaining lines in the stream
-	        """
-	        return []
-	
-	
-	#=============================================================================
-	class ${4:OutputStream}( $2 ):
-	    """
-	    Emulates a file-like stream that can accept output.
-	
-	    Dependencies
-	
-	        class $2
-	    """
-	
-	    #=========================================================================
-	    def __init__( self ):
-	        """
-	        Initializes an $4 object.
-	        """
-	        super( $4, self ).__init__()
-	
-	
-	    #=========================================================================
-	    def truncate( self, size = 0 ):
-	        """
-	        Truncate the file's size.  If the size is not specified, the file is
-	        truncated to the current position.  If the size is specified, the file
-	        _should_ be that size after truncation (which may include making the
-	        file larger if it is smaller than the given size).
-	        """
-	        pass
-	
-	
-	    #=========================================================================
-	    def write( self, string ):
-	        """
-	        Writes data to the stream.
-	        """
-	        pass
-	
-	
-	    #=========================================================================
-	    def writelines( self, sequence ):
-	        """
-	        Writes a sequence of strings to the file.  Line separators are not
-	        added by this method; each item in the sequence should terminate
-	        themselves.
-	        """
-	        pass
 	
 # end of snippet
 
@@ -1035,7 +840,7 @@ snippet main
 	    @return     Shell exit code (0 = success)
 	    """
 	
-	    # Return success.
+	    # Return result.
 	    return 0
 	
 	
@@ -1076,10 +881,10 @@ snippet shell
 	    @return     Shell exit code (0 = success)
 	    """
 	
-	    # imports when using this as a script
+	    # Import argparse when using this module as a script.
 	    import argparse
 	
-	    # create and configure an argument parser
+	    # Create and configure an argument parser.
 	    parser = argparse.ArgumentParser(
 	        description = '$1',
 	        add_help    = False
@@ -1100,13 +905,13 @@ snippet shell
 	        version = __version__
 	    )
 	
-	    # parse the arguments
+	    # Parse the arguments.
 	    args = parser.parse_args( argv[ 1 : ] )
 	
-	    # check args.* for script execution here
+	    # Check args.* for script execution here.
 	    $2print 'Template code executed.  Replace with real code.'
 	
-	    # return success
+	    # Return result.
 	    return 0
 	
 	
@@ -1130,9 +935,6 @@ snippet source
 	"""
 	
 	
-	__version__ = '0.0.0'
-	
-	
 # end of snippet
 
 # New unittest Test Script
@@ -1154,9 +956,6 @@ snippet test
 	
 	
 	import $1
-	
-	
-	__version__ = '0.0.0'
 	
 	
 	#=============================================================================
