@@ -200,6 +200,67 @@ endfunction
 
 
 "=============================================================================
+" Makes the current single-line comment a proper sentence.
+"
+" @param line Optional line number to begin formatting (default: current)
+"=============================================================================
+function! code#CommentSentence( ... )
+
+    " set the current line to begin editing
+    let l:line = a:0 > 0 ? a:1 : line( '.' )
+
+    " gather all comment contents starting at the current line
+    let l:comments = _gather_comments( l:line )
+
+    " verify we retrieved something
+    if len( l:comments ) == 0
+        return
+    endif
+
+    " calculate some metrics on what we found
+    let l:num_lines = len( l:comments.lines )
+    let l:end       = l:line + l:num_lines
+    let l:idlen     = strlen( l:comments.indent )
+    let l:pflen     = strlen( l:comments.prefix )
+
+    " capitalize the first character of the first line
+    let l:sub = l:comments.lines[ 0 ]
+    let l:comments.lines[ 0 ] = toupper( l:sub[ 0 ] ) . l:sub[ 1 : ]
+
+    " dot the end of the last line (if it isn't already)
+    let l:sub = l:comments.lines[ -1 ]
+    if l:sub[ -1 : ] != '.'
+        let l:comments.lines[ -1 ] = l:sub . '.'
+    endif
+
+    " set the comment prefix
+    let l:cpf = l:comments.prefix . ' '
+
+    " iterate through the comment content
+    let l:index = l:line
+    let l:pline = ''
+    for l:cline in l:comments.lines
+
+        " attempt to sentence-case things that might need it
+        if l:pline[ -1 : ] == '.'
+            let l:cline = toupper( l:cline[ 0 ] ) . l:cline[ 1 : ]
+        endif
+        let l:cline = substitute( l:cline, '\v\.(\s+\w)', '\.\U\1', 'g' )
+        let l:pline = l:cline
+
+        " replace the contents on each line with the parsed content
+        call setline( l:index, l:comments.indent . l:cpf . l:cline )
+        let l:index = l:index + 1
+
+    endfor
+
+    " reflow the content in the comment range
+    execute 'normal! gq' . l:num_lines . 'j'
+
+endfunction
+
+
+"=============================================================================
 " Converts a decimal string to a hexadecimal string prefixed with "0x"
 "
 " This function accepts single arguments, or it can operate on the current

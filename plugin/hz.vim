@@ -20,6 +20,7 @@ cnoreabbrev bx update<bar>bdelete
 
 " Comment formalizing command
 command! CB call code#CommentBlock()
+command! CS call code#CommentSentence()
 
 " Custom hexadecimal conversion commands
 command! -nargs=? -range D2H call code#d2h( <line1>, <line2>, '<args>' )
@@ -93,7 +94,7 @@ nnoremap <silent> <Leader>j :call code#SplitLine()<CR>
 
 " Normalize quick-entry comments into nice-looking block comments.
 nnoremap <silent> <Leader>m :call code#CommentBlock()<CR>
-nnoremap <silent> <Leader>M :call code#CommentBlock( line( '.' ), 70 )<CR>
+nnoremap <silent> <Leader>M :call code#CommentSentence()<CR>
 
 " Toggle line numbering.
 nnoremap <silent> <Leader>n :call display#ToggleNumber()<CR>
