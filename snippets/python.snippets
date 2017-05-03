@@ -18,6 +18,10 @@ snippet b0
 	#=============================================================================
 snippet b1
 	    #=========================================================================
+snippet b2
+	        #=====================================================================
+snippet b3
+	            #=================================================================
 # end of snippet
 
 # Section Comments
@@ -193,22 +197,14 @@ snippet qdemo
 	        # Window Setup
 	        super().__init__( *args )
 	        self.setWindowTitle( 'Demo' )
-	        self.setStyleSheet( '''
-	            QWidget {
-	                color: #E0E0E0;
-	                background-color: #303030;
-	            }
-	        ''' )
 	
 	        # Layout Setup
-	        layout = qt.QGridLayout( self )
-	        layout.setSpacing( 0 )
-	        layout.setContentsMargins( 10, 10, 10, 10 )
+	        layout = qt.QVBoxLayout( self )
 	
 	        # Widget Population
 	        button = qt.QPushButton( 'Hello', self )
 	        button.clicked.connect( self._handle_button )
-	        layout.addWidget( button, 0, 0 )
+	        layout.addWidget( button )
 	
 	
 	    #=========================================================================
@@ -240,7 +236,7 @@ snippet qdemo
 	
 	
 	#=============================================================================
-	if __name__ == "__main__":
+	if __name__ == '__main__':
 	    sys.exit( main( sys.argv ) )
 	
 	
@@ -850,7 +846,7 @@ snippet main
 	
 	
 	#=============================================================================
-	if __name__ == "__main__":
+	if __name__ == '__main__':
 	    import sys
 	    sys.exit( main( sys.argv ) )
 	
@@ -858,7 +854,7 @@ snippet main
 
 # Generic Shell Script
 snippet shell
-	#!/usr/bin/env python
+	#!/usr/bin/env python3
 	#=============================================================================
 	#
 	# ${1:Shell Script}
@@ -874,7 +870,14 @@ snippet shell
 	import sys
 	
 	
-	__version__ = '0.0.0'
+	#=============================================================================
+	def ${2:application}( args ):
+	    """
+	    Application
+	    """
+	
+	    # Return result.
+	    return 0
 	
 	
 	#=============================================================================
@@ -901,27 +904,20 @@ snippet shell
 	        help    = 'Display this help message and exit.',
 	        action  = 'help'
 	    )
-	    parser.add_argument(
-	        '-v',
-	        '--version',
-	        default = False,
-	        help    = 'Display script version and exit.',
-	        action  = 'version',
-	        version = __version__
-	    )
 	
 	    # Parse the arguments.
 	    args = parser.parse_args( argv[ 1 : ] )
 	
-	    # Check args.* for script execution here.
-	    $2print 'Template code executed.  Replace with real code.'
+	    # Run the application.
+	    print( 'Template code executed.  Replace with real code.' )
+	    result = $2( args )
 	
 	    # Return result.
-	    return 0
+	    return result
 	
 	
 	#=============================================================================
-	if __name__ == "__main__":
+	if __name__ == '__main__':
 	    sys.exit( main( sys.argv ) )
 	
 # end of snippet
@@ -944,7 +940,7 @@ snippet source
 
 # New unittest Test Script
 snippet test
-	#!/usr/bin/env python
+	#!/usr/bin/env python3
 	#=============================================================================
 	#
 	# ${1:module} Module Unit Tests
@@ -958,7 +954,6 @@ snippet test
 	
 	
 	import unittest
-	
 	
 	import $1
 	
@@ -979,6 +974,14 @@ snippet test
 	
 	
 	    #=========================================================================
+	    def test_init( self ):
+	        """
+	        Tests the $1.__init__ method.
+	        """
+	        pass
+	
+	
+	    #=========================================================================
 	    def test_${2:method}( self ):
 	        """
 	        Tests the $1.$2 method.
@@ -989,6 +992,7 @@ snippet test
 	# Run tests when run directly from the shell.
 	if __name__ == '__main__':
 	    unittest.main()
+	
 	
 # end of snippet
 
