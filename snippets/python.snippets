@@ -127,6 +127,14 @@ snippet error
 
 # Instant demo program
 
+# Import PyQt the same way every time
+snippet qt
+	import PyQt5.QtWidgets as qt
+	import PyQt5.QtCore    as qtc
+	import PyQt5.QtGui     as qtg
+	import PyQt5.QtTest    as qtest
+# end of snippet
+
 # Extending a widget
 snippet widget
 	#=============================================================================
@@ -141,7 +149,7 @@ snippet widget
 	        """
 	        Initializes a $1 widget.
 	        """
-	        super().__init__( *args )
+	        super( $1, self ).__init__( *args )
 	
 # Layouts
 snippet qgrid
@@ -195,7 +203,7 @@ snippet qdemo
 	        """
 	
 	        # Window Setup
-	        super().__init__( *args )
+	        super( Demo, self ).__init__( *args )
 	        self.setWindowTitle( 'Demo' )
 	
 	        # Layout Setup
