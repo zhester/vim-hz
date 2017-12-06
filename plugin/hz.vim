@@ -147,3 +147,7 @@ endif
 " Test Code
 "-----------------------------------------------------------------------------
 
+" ProSnip testing command and mapping
+command! PS call prosnip#Start()
+inoremap <S-Tab> <C-o>:call prosnip#Start()<CR>
+
