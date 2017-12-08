@@ -149,5 +149,9 @@ endif
 
 " ProSnip testing command and mapping
 command! PS call prosnip#Start()
-inoremap <S-Tab> <C-o>:call prosnip#Start()<CR>
+inoremap <silent> <C-;> <C-o>:call prosnip#Start()<CR>
+nnoremap <silent> ; :call prosnip#Start()<CR>
+vnoremap <silent> ; :call prosnip#Start()<CR>
+inoremap <silent> <C-a> <C-r>=prosnip#StartInsert()<CR>
+inoremap <expr> <C-b> prosnip#StartExpr()
 

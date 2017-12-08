@@ -32,8 +32,31 @@
 "    - NO MORE `c0` `b2` etc. snippets!
 "    - NO MORE worrying about the current column when inserting indendent
 "      constructs (functions can also ignore current indent).
+"  - support repeat operator
 "
 "=============================================================================
+
+
+"=============================================================================
+" Entry Point for Expression Mappings
+"=============================================================================
+function! prosnip#StartExpr()
+    " *map <expr> K prosnip#StartExpr() uses returned string as inserted text
+    return line( '.' ) . &filetype . mode()
+endfunction
+
+
+"=============================================================================
+" Entry Point for Register-like Insertion
+"=============================================================================
+function! prosnip#StartInsert()
+    " inoremap <silent> K <C-r>=prosnip#StartInsert()<CR>
+    " Note: This appears to be the only way to actually be _in_ insert mode
+    " and call a function (e.g. so the auto-complete box will work).
+    let l:opts = [ '123', '456', '789' ]
+    call complete( col( '.' ), l:opts )
+    return ''
+endfunction
 
 
 "=============================================================================
@@ -43,6 +66,9 @@ function! prosnip#Start( ... )
 
     " Set the current line to begin scanning/inserting.
     let l:line = a:0 > 0 ? a:1 : line( '.' )
+
+    " Get the content from the current line.
+    let l:text = getline( l:line )
 
     " ZIH temp testing
 
@@ -58,7 +84,7 @@ function! prosnip#Start( ... )
     if l:mode == 'i'
         call setline( line( '.' ), l:msg )
     else
-        echo l:msg
+        echom l:msg
     endif
 
 endfunction
