@@ -38,26 +38,26 @@ hi Visual           cterm=none      ctermbg=0       ctermfg=none
 " hi VisualNOS        cterm=none      ctermbg=none    ctermfg=none
 
 " Window Margins
-hi ColorColumn      cterm=none      ctermbg=11      ctermfg=none
+hi ColorColumn      cterm=none      ctermbg=8      ctermfg=none
 hi CursorLineNr     cterm=none      ctermbg=8       ctermfg=9
 hi LineNr           cterm=none      ctermbg=0       ctermfg=10
 
 " StatusLine
-hi SLCursor         cterm=none      ctermbg=11      ctermfg=3
-hi SLFileInfo       cterm=none      ctermbg=11      ctermfg=4
-hi SLFileName       cterm=none      ctermbg=11      ctermfg=3
-hi SLFlags          cterm=none      ctermbg=11      ctermfg=1
-hi SLPlace          cterm=none      ctermbg=11      ctermfg=3
-hi SLToggle         cterm=none      ctermbg=11      ctermfg=9
-hi StatusLine       cterm=none      ctermbg=11      ctermfg=12
-hi StatusLineNC     cterm=none      ctermbg=11      ctermfg=0
+hi SLCursor         cterm=none      ctermbg=8      ctermfg=3
+hi SLFileInfo       cterm=none      ctermbg=8      ctermfg=4
+hi SLFileName       cterm=none      ctermbg=8      ctermfg=3
+hi SLFlags          cterm=none      ctermbg=8      ctermfg=1
+hi SLPlace          cterm=none      ctermbg=8      ctermfg=3
+hi SLToggle         cterm=none      ctermbg=8      ctermfg=9
+hi StatusLine       cterm=none      ctermbg=8      ctermfg=12
+hi StatusLineNC     cterm=none      ctermbg=8      ctermfg=0
 
 " Menu Interfaces
 hi Pmenu            cterm=none      ctermbg=0       ctermfg=12
 hi PmenuSbar        cterm=none      ctermbg=0       ctermfg=0
-hi PmenuSel         cterm=none      ctermbg=11      ctermfg=3
-hi PmenuThumb       cterm=none      ctermbg=11      ctermfg=3
-hi WildMenu         cterm=none      ctermbg=11      ctermfg=3
+hi PmenuSel         cterm=none      ctermbg=8      ctermfg=3
+hi PmenuThumb       cterm=none      ctermbg=8      ctermfg=3
+hi WildMenu         cterm=none      ctermbg=8      ctermfg=3
 
 " Command Entry/Results
 " hi ModeMsg          cterm=none      ctermbg=none    ctermfg=none
@@ -70,14 +70,14 @@ hi WildMenu         cterm=none      ctermbg=11      ctermfg=3
 
 " Folding
 " hi Folded           cterm=none      ctermbg=none    ctermfg=none
-" hi SignColumn       cterm=none      ctermbg=none    ctermfg=none
+hi SignColumn       cterm=none      ctermbg=8    ctermfg=3
 " hi FoldColumn       cterm=none      ctermbg=none    ctermfg=none
 
 " Tabs/Windows
 " hi TabLine          cterm=none      ctermbg=none    ctermfg=none
 " hi TabLineFill      cterm=none      ctermbg=none    ctermfg=none
 " hi TabLineSel       cterm=none      ctermbg=none    ctermfg=none
-hi VertSplit        cterm=none      ctermbg=11      ctermfg=12
+hi VertSplit        cterm=none      ctermbg=8      ctermfg=12
 
 "-----------------------------------------------------------------------------
 " In-buffer Highlighting
